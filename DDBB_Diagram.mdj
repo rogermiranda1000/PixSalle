@@ -845,6 +845,64 @@
 							"headNameLabel": {
 								"$ref": "AAAAAAGAUkcdQSULGkU="
 							}
+						},
+						{
+							"_type": "UMLNoteView",
+							"_id": "AAAAAAGAbEu31WPQuAo=",
+							"_parent": {
+								"$ref": "AAAAAAGAUjWXDCO9ds0="
+							},
+							"font": "Arial;13;0",
+							"left": 296,
+							"top": 208,
+							"width": 107.40087890625,
+							"height": 73,
+							"text": "MEMBERSHIP és un enum que pot valdre 'cool' o 'active'"
+						},
+						{
+							"_type": "UMLNoteLinkView",
+							"_id": "AAAAAAGAbEvusmPUzQo=",
+							"_parent": {
+								"$ref": "AAAAAAGAUjWXDCO9ds0="
+							},
+							"font": "Arial;13;0",
+							"head": {
+								"$ref": "AAAAAAGAUjWldiPDD1A="
+							},
+							"tail": {
+								"$ref": "AAAAAAGAbEu31WPQuAo="
+							},
+							"lineStyle": 1,
+							"points": "331:281;308:327"
+						},
+						{
+							"_type": "UMLNoteView",
+							"_id": "AAAAAAGAbGT232PcWcI=",
+							"_parent": {
+								"$ref": "AAAAAAGAUjWXDCO9ds0="
+							},
+							"font": "Arial;13;0",
+							"left": 968,
+							"top": 208,
+							"width": 95.12451171875,
+							"height": 77,
+							"text": "EXTENSION és un enum que pot valdre 'png' o 'jpg'"
+						},
+						{
+							"_type": "UMLNoteLinkView",
+							"_id": "AAAAAAGAbGVHYWPi5Hk=",
+							"_parent": {
+								"$ref": "AAAAAAGAUjWXDCO9ds0="
+							},
+							"font": "Arial;13;0",
+							"head": {
+								"$ref": "AAAAAAGAUjW97CPQBkc="
+							},
+							"tail": {
+								"$ref": "AAAAAAGAbGT232PcWcI="
+							},
+							"lineStyle": 1,
+							"points": "1033:285;1053:327"
 						}
 					]
 				},
@@ -1180,7 +1238,7 @@
 								"$ref": "AAAAAAGAUkYvoyTDLws="
 							},
 							"name": "photo_id",
-							"type": "INTEGER",
+							"type": "VARCHAR",
 							"primaryKey": true,
 							"foreignKey": true,
 							"referenceTo": {
