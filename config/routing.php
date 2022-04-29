@@ -14,4 +14,9 @@ function addRoutes(App $app): void
     $app->post('/sign-in', UserSessionController::class . ':signIn');
     $app->get('/sign-up', SignUpController::class . ':showSignUpForm')->setName('signUp');
     $app->post('/sign-up', SignUpController::class . ':signUp');
+
+    $app->get('/profile', SignUpController::class . ':showProfileForm')->setName('profile');
+    $app->post('/profile', SignUpController::class . ':changeProfile');
+    $app->get('/profile/changePassword', SignUpController::class . ':showChangePasswordForm')->setName('changePassword');
+    $app->post('/profile/changePassword', SignUpController::class . ':changePassword');
 }
