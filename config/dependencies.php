@@ -8,7 +8,9 @@ use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
+
 use Slim\Views\Twig;
+use Slim\Flash\Messages;
 
 function addDependencies(ContainerInterface $container): void
 {
@@ -16,6 +18,13 @@ function addDependencies(ContainerInterface $container): void
         'view',
         function () {
             return Twig::create(__DIR__ . '/../templates', ['cache' => false]);
+        }
+    );
+
+    $container->set(
+        'flash',
+        function () {
+            return new Messages();
         }
     );
 
@@ -51,7 +60,7 @@ function addDependencies(ContainerInterface $container): void
     $container->set(
         MembershipController::class,
         function (ContainerInterface $c) {
-            return new MembershipController($c->get('view'), $c->get('user_repository'));
+            return new MembershipController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
         }
     );
 }

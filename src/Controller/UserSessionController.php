@@ -31,7 +31,9 @@ class UserSessionController
 
         // show log-in
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        return $this->twig->render($response, 'sign-in.twig', ['formAction' => $routeParser->urlFor('signIn')]);
+        return $response
+                ->withHeader('Location', $routeParser->urlFor("signIn"))
+                ->withStatus(302);
     }
 
     public function showSignInForm(Request $request, Response $response): Response {
