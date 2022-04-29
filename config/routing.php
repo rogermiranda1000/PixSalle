@@ -6,6 +6,7 @@ use Salle\PixSalle\Controller\API\BlogAPIController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
+use Salle\PixSalle\Middleware\RequireLoginMiddleware;
 use Slim\App;
 
 function addRoutes(App $app): void
@@ -17,6 +18,9 @@ function addRoutes(App $app): void
     $app->post('/sign-up', SignUpController::class . ':signUp');
 
     
-    $app->get('/membership', MembershipController::class . ':showMembershipForm')->setName('membership');
-    $app->post('/membership', MembershipController::class . ':applyMembership');
+    $app->get('/membership', MembershipController::class . ':showMembershipForm')
+        ->setName('membership')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/membership', MembershipController::class . ':applyMembership')
+        ->add(RequireLoginMiddleware::class);
 }

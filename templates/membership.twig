@@ -5,9 +5,9 @@
 {% block content %}
 <h1>Memberships</h1>
 <form action="{{ formAction }}" method="POST">
-	<input type="radio" id="cool" name="membership" value="Cool">
+	<input type="radio" id="cool" name="membership" value="Cool" {% if current == "cool" %}checked{% endif %}>
 	<label for="cool">Cool</label><br>
-	<input type="radio" id="active" name="membership" value="Active">
+	<input type="radio" id="active" name="membership" value="Active" {% if current == "active" %}checked{% endif %}>
 	<label for="active">Active</label><br><br>
 
 	<input type="submit" value="Change">

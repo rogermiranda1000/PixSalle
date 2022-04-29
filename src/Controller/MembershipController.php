@@ -28,7 +28,8 @@ final class MembershipController
             $response,
             'membership.twig',
             [
-                'formAction' => $routeParser->urlFor('membership')
+                'formAction' => $routeParser->urlFor('membership'),
+                'current' => 'cool'
             ]
         );
     }
