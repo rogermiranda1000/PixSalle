@@ -51,7 +51,7 @@ function addDependencies(ContainerInterface $container): void
     $container->set(
         MembershipController::class,
         function (ContainerInterface $c) {
-            return new MembershipController($c->get('view'));
+            return new MembershipController($c->get('view'), $c->get('user_repository'));
         }
     );
 }

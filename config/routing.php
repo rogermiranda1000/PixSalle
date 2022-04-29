@@ -11,9 +11,10 @@ use Slim\App;
 
 function addRoutes(App $app): void
 {
-    $app->get('/', UserSessionController::class . ':showSignInForm')->setName('signIn');
+    $app->get('/', UserSessionController::class . ':showSignInForm');
     $app->get('/sign-in', UserSessionController::class . ':showSignInForm')->setName('signIn');
     $app->post('/sign-in', UserSessionController::class . ':signIn');
+    $app->get('/logout', UserSessionController::class . ':logout')->setName('logout');
     $app->get('/sign-up', SignUpController::class . ':showSignUpForm')->setName('signUp');
     $app->post('/sign-up', SignUpController::class . ':signUp');
 

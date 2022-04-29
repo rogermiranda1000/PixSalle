@@ -7,6 +7,7 @@ namespace Salle\PixSalle\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use Salle\PixSalle\Repository\UserRepository;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 
@@ -15,21 +16,26 @@ use DateTime;
 final class MembershipController
 {
     private Twig $twig;
+    private UserRepository $userRepository;
 
-    public function __construct(Twig $twig) {
+    public function __construct(Twig $twig, UserRepository $userRepository) {
         $this->twig = $twig;
+        $this->userRepository = $userRepository;
     }
 
     public function showMembershipForm(Request $request, Response $response): Response
     {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
+        $user = $this->userRepository->getUserById($_SESSION['user_id']);
+        // we'll asume that the ID is always correct ($user != null)
+
         return $this->twig->render(
             $response,
             'membership.twig',
             [
                 'formAction' => $routeParser->urlFor('membership'),
-                'current' => 'cool'
+                'current' => $user->membership
             ]
         );
     }
