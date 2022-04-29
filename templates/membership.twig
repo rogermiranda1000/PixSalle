@@ -1,0 +1,15 @@
+{% extends "base.twig" %}
+
+{% block title %}Memberships | PixSalle{% endblock %}
+
+{% block content %}
+<h1>Memberships</h1>
+<form action="{{ formAction }}" method="POST">
+	<input type="radio" id="cool" name="membership" value="Cool">
+	<label for="cool">Cool</label><br>
+	<input type="radio" id="active" name="membership" value="Active">
+	<label for="active">Active</label><br><br>
+
+	<input type="submit" value="Change">
+</form>
+{% endblock %}
