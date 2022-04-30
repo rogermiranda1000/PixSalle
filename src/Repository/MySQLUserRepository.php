@@ -19,6 +19,17 @@ final class MySQLUserRepository implements UserRepository
         $this->databaseConnection = $database;
     }
 
+    public function setUserMembership(int $id, string $new_membership): void {
+        $query = "UPDATE users SET membership = :membership WHERE id = :id";
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('membership', $new_membership, PDO::PARAM_STR);
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
+
+        $statement->execute();
+    }
+
     public function createUser(User $user): void
     {
         $query = <<<'QUERY'
@@ -39,6 +50,23 @@ final class MySQLUserRepository implements UserRepository
         $statement->bindParam('updatedAt', $updatedAt, PDO::PARAM_STR);
 
         $statement->execute();
+    }
+
+    public function getUserById(int $id) {
+        $query = "SELECT * FROM users WHERE id = :id";
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $count = $statement->rowCount();
+        if ($count > 0) {
+            $row = $statement->fetch(PDO::FETCH_OBJ);
+            return $row;
+        }
+        return null;
     }
 
     public function getUserByEmail(string $email)
