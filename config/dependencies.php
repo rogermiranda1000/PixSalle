@@ -6,8 +6,10 @@ use Psr\Container\ContainerInterface;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
+use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
+use Salle\PixSalle\Repository\ImageManager;
 
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
@@ -25,6 +27,11 @@ function addDependencies(ContainerInterface $container): void
         'flash',
         function () {
             return new Messages();
+        }
+    );
+
+    $container->set('image', function () {
+            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR']);
         }
     );
 
@@ -61,6 +68,13 @@ function addDependencies(ContainerInterface $container): void
         MembershipController::class,
         function (ContainerInterface $c) {
             return new MembershipController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
+        }
+    );
+
+    $container->set(
+        ExploreController::class,
+        function (ContainerInterface $c) {
+            return new ExploreController($c->get('view'), $c->get('user_repository'), $c->get('image'));
         }
     );
 }

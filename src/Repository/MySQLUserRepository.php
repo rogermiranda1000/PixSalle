@@ -6,6 +6,7 @@ namespace Salle\PixSalle\Repository;
 
 use PDO;
 use Salle\PixSalle\Model\User;
+use Salle\PixSalle\Model\Photo;
 use Salle\PixSalle\Repository\UserRepository;
 
 final class MySQLUserRepository implements UserRepository
@@ -28,6 +29,31 @@ final class MySQLUserRepository implements UserRepository
         $statement->bindParam('id', $id, PDO::PARAM_INT);
 
         $statement->execute();
+    }
+
+    public function getPhotos() {
+        $query = <<<'QUERY'
+        SELECT photos.uuid, photos.extension, profile.username AS profile_photo_author, uploader.username AS upload_photo_author
+        FROM photos LEFT JOIN users AS profile ON profile.profile_picture = photos.uuid -- profile pictures
+
+        -- upload pictures
+        LEFT JOIN albumphoto ON photos.uuid = albumphoto.photo_id
+        LEFT JOIN albums ON (albumphoto.album_name = albums.name
+                                AND albumphoto.portfolio_name = albums.portfolio_name)
+        LEFT JOIN portfolios ON portfolios.name = albums.portfolio_name
+        LEFT JOIN users AS uploader ON uploader.id = portfolios.user_id;
+        QUERY;
+
+        $statement = $this->databaseConnection->prepare($query);
+        $statement->execute();
+
+        $results = array();
+        while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
+            $author = $row->profile_photo_author;
+            if ($author === null) $author = $row->upload_photo_author;
+            if ($author !== null) array_push($results, new Photo($row->uuid, $row->extension, $author));
+        }
+        return $results;
     }
 
     public function createUser(User $user): void

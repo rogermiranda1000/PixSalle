@@ -12,8 +12,6 @@ use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
 
-use DateTime;
-
 final class MembershipController
 {
     private Twig $twig;
