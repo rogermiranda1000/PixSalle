@@ -26,7 +26,7 @@ ALTER TABLE `users`
 ALTER TABLE `users`
     ADD `phone`         VARCHAR(255);
 ALTER TABLE `users`
-    ADD `username`      VARCHAR(255); -- TODO unique
+    ADD `username`      VARCHAR(255)            NOT NULL UNIQUE;
 
 CREATE TABLE `portfolios`
 (

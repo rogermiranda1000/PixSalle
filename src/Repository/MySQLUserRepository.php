@@ -59,18 +59,20 @@ final class MySQLUserRepository implements UserRepository
     public function createUser(User $user): void
     {
         $query = <<<'QUERY'
-        INSERT INTO users(email, password, createdAt, updatedAt)
-        VALUES(:email, :password, :createdAt, :updatedAt)
+        INSERT INTO users(email, username, password, createdAt, updatedAt)
+        VALUES(:email, :username, :password, :createdAt, :updatedAt)
         QUERY;
 
         $statement = $this->databaseConnection->prepare($query);
 
         $email = $user->email();
+        $username = $user->username();
         $password = $user->password();
         $createdAt = $user->createdAt()->format(self::DATE_FORMAT);
         $updatedAt = $user->updatedAt()->format(self::DATE_FORMAT);
 
         $statement->bindParam('email', $email, PDO::PARAM_STR);
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
         $statement->bindParam('password', $password, PDO::PARAM_STR);
         $statement->bindParam('createdAt', $createdAt, PDO::PARAM_STR);
         $statement->bindParam('updatedAt', $updatedAt, PDO::PARAM_STR);
