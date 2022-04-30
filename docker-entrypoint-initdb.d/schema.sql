@@ -23,6 +23,10 @@ ALTER TABLE `users`
     ADD `membership`    enum('cool', 'active')  DEFAULT 'cool';
 ALTER TABLE `users`
     ADD `wallet`        FLOAT                   DEFAULT 0;
+ALTER TABLE `users`
+    ADD `phone`         VARCHAR(255);
+ALTER TABLE `users`
+    ADD `username`      VARCHAR(255); -- TODO unique
 
 CREATE TABLE `portfolios`
 (
