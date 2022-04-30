@@ -57,3 +57,6 @@ CREATE TABLE `albumphoto`
     FOREIGN KEY (`portfolio_name`) REFERENCES portfolios(`name`),
     FOREIGN KEY (`photo_id`) REFERENCES photos(`uuid`)
 );
+
+ALTER TABLE `users`
+    ADD `profile_picture` VARCHAR(255) REFERENCES photos(`uuid`);
