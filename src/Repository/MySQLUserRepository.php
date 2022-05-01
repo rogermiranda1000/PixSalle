@@ -59,8 +59,8 @@ final class MySQLUserRepository implements UserRepository
     public function createUser(User $user): void
     {
         $query = <<<'QUERY'
-        INSERT INTO users(email, username, password, createdAt, updatedAt)
-        VALUES(:email, :username, :password, :createdAt, :updatedAt)
+        INSERT INTO users(email, username, password, createdAt, updatedAt, phone)
+        VALUES(:email, :username, :password, :createdAt, :updatedAt, :phone)
         QUERY;
 
         $statement = $this->databaseConnection->prepare($query);
@@ -70,12 +70,60 @@ final class MySQLUserRepository implements UserRepository
         $password = $user->password();
         $createdAt = $user->createdAt()->format(self::DATE_FORMAT);
         $updatedAt = $user->updatedAt()->format(self::DATE_FORMAT);
+        $phone = $user->phone();
 
         $statement->bindParam('email', $email, PDO::PARAM_STR);
         $statement->bindParam('username', $username, PDO::PARAM_STR);
         $statement->bindParam('password', $password, PDO::PARAM_STR);
         $statement->bindParam('createdAt', $createdAt, PDO::PARAM_STR);
         $statement->bindParam('updatedAt', $updatedAt, PDO::PARAM_STR);
+        $statement->bindParam('phone', $phone, PDO::PARAM_STR);
+
+        $statement->execute();
+
+        // Set default username
+        $created = $this->getUserByEmail($email);
+        $created->setUsername("user" . $created->id());
+        $this->modifyUserBasic($created);
+    }
+
+    public function modifyUserBasic($user): void
+    {
+        $query = <<<'QUERY'
+        UPDATE users SET
+            username = :username, phone = :phone
+        WHERE id = :id
+        QUERY;
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $username = $user->username();
+        $phone = $user->phone();
+        $id = $user->id();
+
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
+        $statement->bindParam('phone', $phone, PDO::PARAM_STR);
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
+
+        $statement->execute();
+    }
+
+    public function setPhoto($id, $uuid): void {
+        $query = <<<'QUERY'
+        UPDATE users SET
+            photo = :username, phone = :phone
+        WHERE id = :id
+        QUERY;
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $username = $user->username();
+        $phone = $user->phone();
+        $id = $user->id();
+
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
+        $statement->bindParam('phone', $phone, PDO::PARAM_STR);
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
 
         $statement->execute();
     }
