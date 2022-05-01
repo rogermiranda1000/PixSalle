@@ -7,6 +7,8 @@ namespace Salle\PixSalle\Repository;
 use Salle\PixSalle\Model\Photo;
 
 interface ImageRepository {
-    public function getPhoto(string $uuid, string $path): string;
-    public function savePhoto(string $photo, string $extension): string;
+    public function getPhoto(string $uuid, string $extension): string;
+    public function savePhoto($photo): string;
+    public function getPhotoSize(string $uuid, string $extension): array;
+    public function removePhoto(string $uuid, string $extension): void;
 }

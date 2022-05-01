@@ -59,12 +59,8 @@ class ProfileController
         $fileName = $uploadedFile->getClientFilename();
         $fileInfo = pathinfo($fileName);
         $format = $fileInfo['extension'];
-        $size = getimagesize($fileName);
         if (!$this->isValidFormat($format)) {
             $errors['image'] = 'Only png and jpg images are allowed';
-        }
-        else if( !$this->isValidDimensions($size)) {
-            $errors['image'] = 'The image should be (500 x 500) or less';
         }
         $errors['username'] = $this->validator->validateUsername($data['username']);
         if ($errors['username'] == '') {
@@ -90,11 +86,28 @@ class ProfileController
                 ]
             );
         }
-        $uuid = $this->imageRepository->savePhoto($fileName, $format);
+
+        $uuid = $this->imageRepository->savePhoto($uploadedFile); // we need to upload it to know its size
+        $size = $this->imageRepository->getPhotoSize($uuid, $format);
+        if(!$this->isValidDimensions($size)) {
+            $this->imageRepository->removePhoto($uuid, $format);
+            $errors['image'] = 'The image should be (500 x 500) or less';
+
+            return $this->twig->render(
+                $response,
+                'profile.twig',
+                [
+                    'formAction' => $routeParser->urlFor('profile'),
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'errors' => $errors
+                ]
+            );
+        }
+
         $this->userRepository->createPhoto($_SESSION['user_id'], $uuid, $format);
         $image = $this->imageRepository->getPhoto($uuid, $format);
-
-
         return $this->twig->render(
             $response,
             'profile.twig',
@@ -113,7 +126,7 @@ class ProfileController
     }
 
     private function isValidDimensions($dimensions): bool {
-        return ($dimensions->width <= self::MAXSIZE && $dimensions->height <= self::MAXSIZE);
+        return ($dimensions[0] <= self::MAXSIZE && $dimensions[1] <= self::MAXSIZE);
     }
 
     public function showChangePasswordForm(Request $request, Response $response): Response {
