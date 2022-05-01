@@ -112,7 +112,8 @@ class ProfileController
             $this->userRepository->createPhoto($_SESSION['user_id'], $uuid, $format);
             $image = $this->imageRepository->getPhoto($uuid, $format);
         }
-
+        $this->userRepository->modifyUserBasic($_SESSION['user_id'], $data['username'], $data['phone']);
+        $user = $this->userRepository->getUserById($_SESSION['user_id']);
         return $this->twig->render(
             $response,
             'profile.twig',
