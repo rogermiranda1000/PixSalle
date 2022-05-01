@@ -128,14 +128,14 @@ final class MySQLUserRepository implements UserRepository
         // Add photo to the user
         $query = <<<'QUERY'
         UPDATE users SET
-            photo = :uuid
+            profile_picture = :uuid
         WHERE id = :id
         QUERY;
 
         $statement = $this->databaseConnection->prepare($query);
 
         $statement->bindParam('uuid', $uuid, PDO::PARAM_STR);
-        $statement->bindParam('id', $idUser, PDO::PARAM_STR);
+        $statement->bindParam('id', $idUser, PDO::PARAM_INT);
 
         $statement->execute();
     }
