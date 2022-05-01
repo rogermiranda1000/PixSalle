@@ -32,7 +32,7 @@ function addDependencies(ContainerInterface $container): void
     );
 
     $container->set('image', function () {
-            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR']);
+            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR'] . '/');
         }
     );
 

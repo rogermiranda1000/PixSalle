@@ -54,21 +54,24 @@ class ProfileController
         if (count($uploadedFiles['files']) !== 1) {
             $errors['file'] = 'Only one file is allowed';
         }
-
-        $uploadedFile = $uploadedFiles['files'][0];
-        $fileName = $uploadedFile->getClientFilename();
-        $fileInfo = pathinfo($fileName);
-        $format = $fileInfo['extension'];
-        if (!$this->isValidFormat($format)) {
-            $errors['image'] = 'Only png and jpg images are allowed';
+        if (count($uploadedFiles['files']) !== 0) {
+            $uploadedFile = $uploadedFiles['files'][0];
+            $fileName = $uploadedFile->getClientFilename();
+            $fileInfo = pathinfo($fileName);
+            $format = $fileInfo['extension'];
+            if (!$this->isValidFormat($format)) {
+                $errors['image'] = 'Only png and jpg images are allowed';
+            }
         }
         $errors['username'] = $this->validator->validateUsername($data['username']);
         if ($errors['username'] == '') {
             unset($errors['username']);
         }
-        $errors['phone'] = $this->validator->validatePhone($data['phone']);
-        if ($errors['phone'] == '') {
-            unset($errors['phone']);
+        if (strlen($data['phone']) != 0) {
+            $errors['phone'] = $this->validator->validatePhone($data['phone']);
+            if ($errors['phone'] == '') {
+                unset($errors['phone']);
+            }
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
@@ -86,28 +89,29 @@ class ProfileController
                 ]
             );
         }
+        if (count($uploadedFiles['files']) !== 0) {
+            $uuid = $this->imageRepository->savePhoto($uploadedFile); // we need to upload it to know its size
+            $size = $this->imageRepository->getPhotoSize($uuid, $format);
+            if (!$this->isValidDimensions($size)) {
+                $this->imageRepository->removePhoto($uuid, $format);
+                $errors['image'] = 'The image should be (500 x 500) or less';
 
-        $uuid = $this->imageRepository->savePhoto($uploadedFile); // we need to upload it to know its size
-        $size = $this->imageRepository->getPhotoSize($uuid, $format);
-        if(!$this->isValidDimensions($size)) {
-            $this->imageRepository->removePhoto($uuid, $format);
-            $errors['image'] = 'The image should be (500 x 500) or less';
-
-            return $this->twig->render(
-                $response,
-                'profile.twig',
-                [
-                    'formAction' => $routeParser->urlFor('profile'),
-                    'username' => $user->username,
-                    'email' => $user->email,
-                    'phone' => $user->phone,
-                    'errors' => $errors
-                ]
-            );
+                return $this->twig->render(
+                    $response,
+                    'profile.twig',
+                    [
+                        'formAction' => $routeParser->urlFor('profile'),
+                        'username' => $user->username,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                        'errors' => $errors
+                    ]
+                );
+            }
+            $this->userRepository->createPhoto($_SESSION['user_id'], $uuid, $format);
+            $image = $this->imageRepository->getPhoto($uuid, $format);
         }
 
-        $this->userRepository->createPhoto($_SESSION['user_id'], $uuid, $format);
-        $image = $this->imageRepository->getPhoto($uuid, $format);
         return $this->twig->render(
             $response,
             'profile.twig',
