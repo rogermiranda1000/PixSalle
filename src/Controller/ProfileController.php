@@ -8,6 +8,7 @@ use Salle\PixSalle\Repository\UserRepository;
 use Salle\PixSalle\Model\User;
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
+use Ramsey\Uuid\Uuid;
 
 class ProfileController
 
@@ -23,10 +24,29 @@ class ProfileController
         $this->userRepository = $userRepository;
     }
     public function showProfileForm(Request $request, Response $response): Response {
-        return $this->twig->render($response, 'profile.twig');
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        $user = $this->userRepository->getUserById($_SESSION['user_id']);
+        return $this->twig->render(
+            $response,
+            'profile.twig',
+            [
+                'formAction' => $routeParser->urlFor('profile'),
+                'username' => $user->username(),
+                'email' => $user->email(),
+                'phone' => $user->phone()
+            ]
+        );
     }
     public function showChangePasswordForm(Request $request, Response $response): Response {
-        return $this->twig->render($response, 'change-password.twig');
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        return $this->twig->render(
+            $response,
+            'change-password.twig',
+            [
+                'formAction' => $routeParser->urlFor('changePassword')
+            ]
+        );
     }
 
 }
