@@ -32,7 +32,7 @@ final class MySQLUserRepository implements UserRepository
     }
 
     public function getNextUsername(): string {
-        $query = "SELECT CONCAT('user', AUTO_INCREMENT) AS next_username FROM information_schema.TABLES WHERE (TABLE_SCHEMA = (SELECT DATABASE()) AND TABLE_NAME = 'users')";
+        $query = "SELECT CONCAT('user', IFNULL(AUTO_INCREMENT, '1')) AS next_username FROM information_schema.TABLES WHERE (TABLE_SCHEMA = (SELECT DATABASE()) AND TABLE_NAME = 'users')";
 
         $statement = $this->databaseConnection->prepare($query);
 

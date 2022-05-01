@@ -67,4 +67,4 @@ ALTER TABLE `users`
 
 -- information_schema update
 
-SET GLOBAL information_schema_stats_expiry=0;
+SET PERSIST information_schema_stats_expiry = 0;
