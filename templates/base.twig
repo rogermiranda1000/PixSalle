@@ -15,24 +15,27 @@
   <body>
     <!-- NAV BAR -->
     <header>
-      <div class="container">
-        <a href="">LogIn</a>
-        <a href="">SignIn</a>
-        <a href="">Wallet</a>
-        <a href="">Membership</a>
-        <a href="">Explore</a>
-        <a href="">Portfolio</a>
+      <div id="navbar">
+        <ul>
+          <li><a href="/">About Us</a></li>
+          <li><a href="sign-in">Sign In</a></li>
+          <li><a href="sign-up">Sign Up</a></li>
+          <li><a href="logout">Log Out</a></li>
+          <li><a href="user/membership">Membership</a></li>
+          <li><a href="explore">Explore</a></li>
+        </ul>
       </div>
     </header>
 
     <!-- Body -->
     <main>
-      {% block content %}{% endblock %}
+      {% block content %}
+      {% endblock %}
     </main>
 
     <!-- Footer -->
     <footer>
-      <div class = "copyright">
+      <div class = "footer">
         <p>Copyright ©2022-2030 PixSalle</p>
       </div>
     </footer>

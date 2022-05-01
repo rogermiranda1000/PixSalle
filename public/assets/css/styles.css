@@ -1,15 +1,45 @@
+html{
+    align-items: center;
+    background-image: url("../images/background_1.jpg");
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     align-content: center;
     max-width: 50rem;
     position: center;
     padding: 16px;
+    margin: auto;
+    background-color: white;
+    text-align: justify;
 }
 
-* {
-    box-sizing: border-box;
+#navbar ul {
+    margin: 0;
+    padding: 5px;
+    list-style-type: none;
+    text-align: center;
+    background-color: #000;
 }
 
-.container{
-    padding: 16px;
+#navbar ul li {
+    display: inline;
+}
+
+#navbar ul li a {
+    text-decoration: none;
+    padding: .2em 1em;
+    color: #fff;
+    background-color: #000;
+}
+
+#navbar ul li a:hover {
+    color: #000;
+    background-color: #fff;
+}
+
+.footer{
+    text-align: center;
+    color: blue;
+    background-color: lightgrey;
 }

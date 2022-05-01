@@ -18,6 +18,6 @@ final class LandingPageController
 
     public function showLandingPage(Request $request, Response $response)
     {
-        return $this->twig->render($response, 'landing.twig', []);
+        return $this->twig->render($response, 'landing-page.twig', []);
     }
 }
