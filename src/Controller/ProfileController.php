@@ -54,14 +54,15 @@ class ProfileController
         if (count($uploadedFiles['files']) !== 1) {
             $errors['file'] = 'Only one file is allowed';
         }
-        if (count($uploadedFiles['files']) !== 0) {
+        if ($uploadedFiles['files'][0]->getError() == UPLOAD_ERR_OK) {
             $uploadedFile = $uploadedFiles['files'][0];
             $fileName = $uploadedFile->getClientFilename();
             $fileInfo = pathinfo($fileName);
             $format = $fileInfo['extension'];
+            /*
             if (!$this->isValidFormat($format)) {
                 $errors['image'] = 'Only png and jpg images are allowed';
-            }
+            }*/
         }
         $errors['username'] = $this->validator->validateUsername($data['username']);
         if ($errors['username'] == '') {
@@ -89,7 +90,8 @@ class ProfileController
                 ]
             );
         }
-        if (count($uploadedFiles['files']) !== 0) {
+        $image = '';
+        if ($uploadedFiles['files'][0]->getError() == UPLOAD_ERR_OK) {
             $uuid = $this->imageRepository->savePhoto($uploadedFile); // we need to upload it to know its size
             $size = $this->imageRepository->getPhotoSize($uuid, $format);
             if (!$this->isValidDimensions($size)) {
