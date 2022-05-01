@@ -9,7 +9,7 @@
         <img src="{{ profilePicture }}" img alt="user's profile picture">
         <br>
     {% endif %}
-    <form action="{{ formAction }}" method="POST">
+    <form action="{{ formAction }}" enctype="multipart/form-data" method="POST">
         <label for="username"> Username: </label>
         <br>
         <input type="text" name="username" placeholder="Enter your username..." {% if username %} value="{{ username }}"{% endif %}>
