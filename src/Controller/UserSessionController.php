@@ -26,8 +26,19 @@ class UserSessionController
         $this->validator = new ValidatorService();
     }
 
+    public function logout(Request $request, Response $response): Response {
+        unset($_SESSION['user_id']); // logout
+
+        // show log-in
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        return $response
+                ->withHeader('Location', $routeParser->urlFor("signIn"))
+                ->withStatus(302);
+    }
+
     public function showSignInForm(Request $request, Response $response): Response {
-        return $this->twig->render($response, 'sign-in.twig');
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        return $this->twig->render($response, 'sign-in.twig', ['formAction' => $routeParser->urlFor('signIn')]);
     }
 
     public function signIn(Request $request, Response $response): Response
@@ -54,7 +65,7 @@ class UserSessionController
             } else if ($user->password != md5($data['password'])) {
                 $errors['password'] = 'Your email and/or password are incorrect.';
             } else {
-                $_SESSION['user_id'] = $user->id;
+                $_SESSION['user_id'] = intval($user->id);
                 return $response->withHeader('Location','/')->withStatus(302);
             }
         }
