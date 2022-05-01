@@ -82,7 +82,7 @@ class ProfileController
                     'username' => $user->username,
                     'email' => $user->email,
                     'phone' => $user->phone,
-                    'errors' => $errors
+                    'formErrors' => $errors
                 ]
             );
         }
@@ -139,6 +139,48 @@ class ProfileController
                 'formAction' => $routeParser->urlFor('changePassword')
             ]
         );
+    }
+
+    public function changePassword(Request $request, Response $response): Response {
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        $errors = [];
+        $data = $request->getParsedBody();
+
+        $errors['oldPassword'] = $this->validator->validatePassword($data['oldPassword']);
+        if ($errors['oldPassword'] == '') {
+            unset($errors['oldPassword']);
+        }
+        $errors['newPassword'] = $this->validator->validatePassword($data['newPassword']);
+        if ($errors['newPassword'] == '') {
+            unset($errors['newPassword']);
+        }
+        if (md5($data['oldPassword']) != $this->userRepository->getUserById($_SESSION['user_id'])->password) {
+            $errors['confirmPassword'] = 'This is not your actual password';
+        }
+        if ($data['newPassword'] != $data['confirmPassword']) {
+            $errors['confirmPassword'] = "Repeat password must match new password";
+        }
+        if (count($errors) > 0) {
+            return $this->twig->render(
+                $response,
+                'change-password.twig',
+                [
+                    'formAction' => $routeParser->urlFor('changePassword'),
+                    'formErrors' => $errors
+                ]
+            );
+        }
+        // Update password in ddbb
+        $this->userRepository->changePassword($_SESSION['user_id'], md5($data['newPassword']));
+        return $this->twig->render(
+            $response,
+            'change-password.twig',
+            [
+                'formAction' => $routeParser->urlFor('changePassword'),
+                'done' => 'Password changed!'
+            ]
+        );
+
     }
 
 }

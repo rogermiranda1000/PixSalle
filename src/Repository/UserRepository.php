@@ -11,6 +11,7 @@ interface UserRepository
 {
     public function createUser(User $user): void;
     public function getUserByEmail(string $email);
+    public function changePassword(int $id, string $password);
 
     // membership
     public function getUserById(int $id);

@@ -176,4 +176,19 @@ final class MySQLUserRepository implements UserRepository
         }
         return null;
     }
+
+    public function changePassword(int $id, string $password) {
+        $query = <<<'QUERY'
+        UPDATE users SET
+            password = :password
+        WHERE id = :id
+        QUERY;
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('password', $password, PDO::PARAM_STR);
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
+
+        $statement->execute();
+    }
 }
