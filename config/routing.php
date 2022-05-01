@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Salle\PixSalle\Controller\LandingPageController;
+use Salle\PixSalle\Controller\PortfolioController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
@@ -35,5 +36,9 @@ function addRoutes(App $app): void
         ->setName('wallet')
         ->add(RequireLoginMiddleware::class);
     $app->post('/user/wallet', WalletController::class . ':addToWallet')
+        ->add(RequireLoginMiddleware::class);
+
+    $app->get('/user/portfolio', PortfolioController::class . ':showPortfolioPage')
+        ->setName('portfolio')
         ->add(RequireLoginMiddleware::class);
 }
