@@ -38,7 +38,7 @@ function addRoutes(App $app): void
     $app->post('/user/wallet', WalletController::class . ':addToWallet')
         ->add(RequireLoginMiddleware::class);
 
-    $app->get('/user/portfolio', PortfolioController::class . ':showPortfolioPage')
+    $app->get('/portfolio', PortfolioController::class . ':showPortfolioPage')
         ->setName('portfolio')
         ->add(RequireLoginMiddleware::class);
 }
