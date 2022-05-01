@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
+use Salle\PixSalle\Controller\LandingPageController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\ProfileController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
+use Salle\PixSalle\Controller\WalletController;
 use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
@@ -52,6 +54,13 @@ function addDependencies(ContainerInterface $container): void
     });
 
     $container->set(
+        LandingPageController::class,
+        function (ContainerInterface $c) {
+            return new LandingPageController($c->get('view'));
+        }
+    );
+
+    $container->set(
         UserSessionController::class,
         function (ContainerInterface $c) {
             return new UserSessionController($c->get('view'), $c->get('user_repository'));
@@ -69,6 +78,13 @@ function addDependencies(ContainerInterface $container): void
         MembershipController::class,
         function (ContainerInterface $c) {
             return new MembershipController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
+        }
+    );
+
+    $container->set(
+        WalletController::class,
+        function (ContainerInterface $c) {
+            return new WalletController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
         }
     );
 

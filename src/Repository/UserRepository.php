@@ -14,6 +14,9 @@ interface UserRepository
     public function changePassword(int $id, string $password);
     public function modifyUserBasic($id, $username, $phone): void;
 
+    //Wallet
+    public function modifyWallet(int $id, float $amount): void;
+
     // membership
     public function getUserById(int $id);
     public function setUserMembership(int $id, string $new_membership): void;

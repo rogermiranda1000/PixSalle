@@ -6,10 +6,39 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
+
     {% block head %}
+      <link rel="stylesheet" href="{{ full_url_for('home') }}assets/css/styles.css"/>
     {% endblock %}
+
   </head>
   <body>
-    {% block content %}{% endblock %}
+    <!-- NAV BAR -->
+    <header>
+      <div id="navbar">
+        <ul>
+          <li><a href="/">About Us</a></li>
+          <li><a href="/sign-in">Sign In</a></li>
+          <li><a href="/sign-up">Sign Up</a></li>
+          <li><a href="/logout">Log Out</a></li>
+          <li><a href="/user/membership">Membership</a></li>
+          <li><a href="/user/wallet">Wallet</a></li>
+          <li><a href="/explore">Explore</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- Body -->
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class = "footer">
+        <p>Copyright ©2022-2030 PixSalle</p>
+      </div>
+    </footer>
   </body>
 </html>

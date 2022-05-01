@@ -20,6 +20,19 @@ final class MySQLUserRepository implements UserRepository
         $this->databaseConnection = $database;
     }
 
+    public function modifyWallet(int $id, float $amount): void {
+        $query = "UPDATE users SET wallet = GREATEST(wallet + (:amount / 100), 0)  WHERE id = :id";
+
+        $amount *= 100;
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('amount', $amount, PDO::PARAM_INT);
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
+
+        $statement->execute();
+    }
+
     public function setUserMembership(int $id, string $new_membership): void {
         $query = "UPDATE users SET membership = :membership WHERE id = :id";
 
