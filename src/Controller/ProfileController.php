@@ -132,7 +132,7 @@ class ProfileController
     }
 
     private function isOverMaxMB($photo): bool {
-        return filesize($photo) > (1 * 1000000);
+        return filesize($photo) > (1024 * 1024);
     }
 
     private function isValidDimensions($dimensions): bool {
