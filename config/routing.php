@@ -8,6 +8,7 @@ use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Middleware\RequireLoginMiddleware;
+use Salle\PixSalle\Controller\ProfileController;
 use Slim\App;
 
 function addRoutes(App $app): void
@@ -19,10 +20,10 @@ function addRoutes(App $app): void
     $app->get('/sign-up', SignUpController::class . ':showSignUpForm')->setName('signUp');
     $app->post('/sign-up', SignUpController::class . ':signUp');
 
-    $app->get('/profile', SignUpController::class . ':showProfileForm')->setName('profile');
-    $app->post('/profile', SignUpController::class . ':changeProfile');
-    $app->get('/profile/changePassword', SignUpController::class . ':showChangePasswordForm')->setName('changePassword');
-    $app->post('/profile/changePassword', SignUpController::class . ':changePassword');
+    $app->get('/profile', ProfileController::class . ':showProfileForm')->setName('profile');
+    $app->post('/profile', ProfileController::class . ':changeProfile');
+    $app->get('/profile/changePassword', ProfileController::class . ':showChangePasswordForm')->setName('changePassword');
+    $app->post('/profile/changePassword', ProfileController::class . ':changePassword');
 
 
     $app->get('/user/membership', MembershipController::class . ':showMembershipForm')
