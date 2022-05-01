@@ -86,7 +86,7 @@ class ProfileController
                     'username' => $user->username,
                     'email' => $user->email,
                     'phone' => $user->phone,
-                    'errors' => $errors
+                    'formErrors' => $errors
                 ]
             );
         }
