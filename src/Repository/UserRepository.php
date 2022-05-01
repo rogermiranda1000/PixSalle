@@ -18,4 +18,5 @@ interface UserRepository
 
     // explore
     public function getPhotos();
+    public function createPhoto($idUser, $uuid, $extension);
 }

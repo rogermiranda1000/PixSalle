@@ -111,22 +111,31 @@ final class MySQLUserRepository implements UserRepository
         $statement->execute();
     }
 
-    public function setPhoto($id, $uuid): void {
+    public function createPhoto($idUser, $uuid, $extension): void {
+        // Create photo
+        $query = <<<'QUERY'
+        INSERT INTO photos(uuid, extension)
+        VALUES(:uuid, :extension)
+        QUERY;
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('uuid', $uuid, PDO::PARAM_STR);
+        $statement->bindParam('extension', $extension, PDO::PARAM_STR);
+
+        $statement->execute();
+
+        // Add photo to the user
         $query = <<<'QUERY'
         UPDATE users SET
-            photo = :username, phone = :phone
+            photo = :uuid
         WHERE id = :id
         QUERY;
 
         $statement = $this->databaseConnection->prepare($query);
 
-        $username = $user->username();
-        $phone = $user->phone();
-        $id = $user->id();
-
-        $statement->bindParam('username', $username, PDO::PARAM_STR);
-        $statement->bindParam('phone', $phone, PDO::PARAM_STR);
-        $statement->bindParam('id', $id, PDO::PARAM_INT);
+        $statement->bindParam('uuid', $uuid, PDO::PARAM_STR);
+        $statement->bindParam('id', $idUser, PDO::PARAM_STR);
 
         $statement->execute();
     }

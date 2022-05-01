@@ -4,10 +4,19 @@
 
 {% block content %}
     <h1>Profile</h1>
+    {% if profilePicture %}
+        <br>
+        <img src="{{ profilePicture }}" img alt="user's profile picture">
+        <br>
+    {% endif %}
     <form action="{{ formAction }}" method="POST">
         <label for="username"> Username: </label>
         <br>
         <input type="text" name="username" placeholder="Enter your username..." {% if username %} value="{{ username }}"{% endif %}>
+        {% if formErrors['username'] %}
+            <br>
+            <p>{{ formErrors['username'] }}</p>
+        {% endif %}
         <br>
         <br>
         <label for="email"> Email: </label>
@@ -18,12 +27,16 @@
         <label for="phone"> Phone number: </label>
         <br>
         <input type="text" name="phone" placeholder="Enter your phone number..." {% if phone %} value="{{ phone }}"{% endif %}>
-        <br>
-        <br>
-        <input type="button" name="profile-picture" value="Profile picture">
-        {% if profilePicture %}
+        {% if formErrors['phone'] %}
             <br>
-            <img src="{{ profilePicture }}" img alt="user's profile picture">
+            <p>{{ formErrors['phone'] }}</p>
+        {% endif %}
+        <br>
+        <br>
+        <input type="file" name="profile-picture" value="Profile picture">
+        {% if formErrors['photo'] %}
+            <br>
+            <p>{{ formErrors['photo'] }}</p>
         {% endif %}
         <br>
         <br>
