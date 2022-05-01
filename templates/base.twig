@@ -6,11 +6,65 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
+
     {% block head %}
-      <link rel="stylesheet" href="../public/assets/styles.css"/>
+      <link rel="stylesheet" href="{{ full_url_for('home') }}assets/css/styles.css"/>
     {% endblock %}
+
   </head>
   <body>
-    {% block content %}{% endblock %}
+    <!-- NAV BAR -->
+    <header>
+      <div class="container">
+        <a href="">LogIn</a>
+        <a href="">SignIn</a>
+        <a href="">Wallet</a>
+        <a href="">Membership</a>
+        <a href="">Explore</a>
+        <a href="">Portfolio</a>
+      </div>
+    </header>
+
+    <!-- Body -->
+    <main>
+      {% block content %}
+        <div class="landing-text">
+          <h2>About Us</h2>
+          <p>
+            PixSalle is a new platform where students can freely showcase their work and express themselves through photography.
+            This web application will allow them to be members, explore photos posted by other photographers and picture editors,
+            view resources that they can use to improve their work and contribute to the knowledge sharing within the community through blogs.
+          </p>
+        </div>
+        <div class="landing-text">
+          <h2>How did we start</h2>
+          <p>
+            The Student Council of La Salle saw that a lot of students are passionate about photography. They have posted their amazing photos
+            on various social media accounts. To help the students develop their skills and inspire them to be professional photographers one day,
+            the professors proposed to create a Photography web application. That's why we developed PixSalle.
+          </p>
+        </div>
+        <div class="landing-text">
+          <h2>What make us different</h2>
+          <h3>Grow as a photographer</h3>
+          <p>
+            Get immediate exposure with your first upload. Our Pulse algorithm surfaces new photographs and photographers, ensuring your photos
+            are seen by the community so that you receive valuable feedback on day one.
+          </p>
+          <h3>Build your career</h3>
+          <p>
+            Market yourself as a professional photographer. Show that you’re available for hire on your Profile and get discovered in Search results,
+            showcase your articles, presents, videos, and more with Resources, and create a Portfolio website to showcase your work.
+          </p>
+        </div>
+      {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class = "copyright">
+        <p>Copyright ©2022-2030 PixSalle</p>
+      </div>
+    </footer>
   </body>
 </html>
