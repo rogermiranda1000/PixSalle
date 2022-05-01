@@ -22,7 +22,7 @@ CREATE TABLE `users`
 ALTER TABLE `users`
     ADD `membership`    enum('cool', 'active')  DEFAULT 'cool';
 ALTER TABLE `users`
-    ADD `wallet`        FLOAT                   DEFAULT 0;
+    ADD `wallet`        FLOAT                   DEFAULT 30;
 ALTER TABLE `users`
     ADD `phone`         VARCHAR(255);
 ALTER TABLE `users`

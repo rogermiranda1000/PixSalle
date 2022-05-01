@@ -7,6 +7,7 @@ use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
+use Salle\PixSalle\Controller\WalletController;
 use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
@@ -68,6 +69,13 @@ function addDependencies(ContainerInterface $container): void
         MembershipController::class,
         function (ContainerInterface $c) {
             return new MembershipController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
+        }
+    );
+
+    $container->set(
+        WalletController::class,
+        function (ContainerInterface $c) {
+            return new WalletController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
         }
     );
 
