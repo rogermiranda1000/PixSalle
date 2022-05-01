@@ -126,4 +126,48 @@ class ProfileController
         );
     }
 
+    public function changePassword(Request $request, Response $response): Response {
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        $errors = [];
+        $data = $request->getParsedBody();
+
+        $errors['oldPassword'] = $this->validator->validatePassword($data['oldPassword']);
+        if ($errors['oldPassword'] == '') {
+            unset($errors['oldPassword']);
+        }
+        $errors['newPassword'] = $this->validator->validatePassword($data['newPassword']);
+        if ($errors['newPassword'] == '') {
+            unset($errors['newPassword']);
+        }
+        if (md5($data['oldPassword']) != $this->userRepository->getUserById($_SESSION['user_id'])['password']) {
+            $errors['repeatPassword'] = 'This is not your actual password';
+        }
+        if ($data['oldPassword'] != $data['newPassword']) {
+            $errors['repeatPassword'] = "Repeat password must match new password";
+        }
+        if ($errors['repeatPassword'] == '') {
+            unset($errors['repeatPassword']);
+        }
+        if (count($errors) > 0) {
+            return $this->twig->render(
+                $response,
+                'change-password.twig',
+                [
+                    'formAction' => $routeParser->urlFor('changePassword'),
+                    'errors' => $errors
+                ]
+            );
+        }
+        // Update password in ddbb
+        $this->userRepository->changePassword($_SESSION['user_id'], md5($data['newPassword']));
+        return $this->twig->render(
+            $response,
+            'change-password.twig',
+            [
+                'formAction' => $routeParser->urlFor('changePassword')
+            ]
+        );
+
+    }
+
 }
