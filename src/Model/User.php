@@ -15,7 +15,7 @@ class User
   private string $password;
   private Datetime $createdAt;
   private Datetime $updatedAt;
-  private string $phone;
+  private ?string $phone;
 
   public function __construct(
     string $email,
@@ -23,7 +23,7 @@ class User
     string $password,
     Datetime $createdAt,
     Datetime $updatedAt,
-    string $phone
+    ?string $phone
   ) {
     $this->email = $email;
     $this->username = $username;
