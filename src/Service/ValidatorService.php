@@ -29,4 +29,18 @@ class ValidatorService
     }
     return '';
   }
+
+  public function validateUsername(string $username) {
+      if (empty($username) || !preg_match("/^[a-zA-Z0-9]+$/", $username)) {
+          return 'The username must be alphanumeric';
+      }
+      return '';
+  }
+
+  public function validatePhone(string $phone) {
+      if (empty($phone) || strlen($phone) != 9 || !preg_match("/^6\d{8}$/", $phone)) {
+          return 'The telephone number must be 9 digits and start with a 6';
+      }
+      return '';
+  }
 }

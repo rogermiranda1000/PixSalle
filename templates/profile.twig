@@ -1,0 +1,47 @@
+{% extends "base.twig" %}
+
+{% block title %}User Profile | PixSalle{% endblock %}
+
+{% block content %}
+    <h1>Profile</h1>
+    {% if profilePicture %}
+        <br>
+        <img src="{{ profilePicture }}" img alt="user's profile picture">
+        <br>
+    {% endif %}
+    <form action="{{ formAction }}" enctype="multipart/form-data" method="POST">
+        <label for="username"> Username: </label>
+        <br>
+        <input type="text" name="username" placeholder="Enter your username..." {% if username %} value="{{ username }}"{% endif %}>
+        {% if formErrors['username'] %}
+            <br>
+            <p>{{ formErrors['username'] }}</p>
+        {% endif %}
+        <br>
+        <br>
+        <label for="email"> Email: </label>
+        <br>
+        <input disabled type="text" name="email" {% if email %} value="{{ email }}"{% endif %}>
+        <br>
+        <br>
+        <label for="phone"> Phone number: </label>
+        <br>
+        <input type="text" name="phone" placeholder="Enter your phone number..." {% if phone %} value="{{ phone }}"{% endif %}>
+        {% if formErrors['phone'] %}
+            <br>
+            <p>{{ formErrors['phone'] }}</p>
+        {% endif %}
+        <br>
+        <br>
+        <input type="file" name="files[]">
+        {% if formErrors['photo'] %}
+            <br>
+            <p>{{ formErrors['photo'] }}</p>
+        {% endif %}
+        <br>
+        <br>
+        <input type="submit" value="Save changes">
+    </form>
+    <br>
+    <a href="/profile/changePassword">Reset Password</a>
+{% endblock %}

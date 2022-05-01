@@ -23,6 +23,7 @@
     "symfony/dotenv": "^5.2",
     "slim/twig-view": "^3.2",
     "ext-json": "*",
-    "slim/flash": "^0.4.0"
+    "slim/flash": "^0.4.0",
+    "ramsey/uuid": "^4.3"
   }
 }

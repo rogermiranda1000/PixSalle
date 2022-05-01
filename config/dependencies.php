@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Psr\Container\ContainerInterface;
 use Salle\PixSalle\Controller\LandingPageController;
 use Salle\PixSalle\Controller\SignUpController;
+use Salle\PixSalle\Controller\ProfileController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
@@ -33,7 +34,7 @@ function addDependencies(ContainerInterface $container): void
     );
 
     $container->set('image', function () {
-            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR']);
+            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR'] . '/');
         }
     );
 
@@ -91,6 +92,13 @@ function addDependencies(ContainerInterface $container): void
         ExploreController::class,
         function (ContainerInterface $c) {
             return new ExploreController($c->get('view'), $c->get('user_repository'), $c->get('image'));
+        }
+    );
+
+    $container->set(
+        ProfileController::class,
+        function (ContainerInterface $c) {
+            return new ProfileController($c->get('view'), $c->get('user_repository'), $c->get('image'));
         }
     );
 }

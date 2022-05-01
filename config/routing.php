@@ -9,6 +9,7 @@ use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Controller\WalletController;
 use Salle\PixSalle\Middleware\RequireLoginMiddleware;
+use Salle\PixSalle\Controller\ProfileController;
 use Slim\App;
 
 function addRoutes(App $app): void
@@ -20,7 +21,18 @@ function addRoutes(App $app): void
     $app->get('/sign-up', SignUpController::class . ':showSignUpForm')->setName('signUp');
     $app->post('/sign-up', SignUpController::class . ':signUp');
 
-    
+    $app->get('/profile', ProfileController::class . ':showProfileForm')
+        ->setName('profile')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/profile', ProfileController::class . ':changeProfile')
+        ->add(RequireLoginMiddleware::class);
+    $app->get('/profile/changePassword', ProfileController::class . ':showChangePasswordForm')
+        ->setName('changePassword')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/profile/changePassword', ProfileController::class . ':changePassword')
+        ->add(RequireLoginMiddleware::class);
+
+
     $app->get('/user/membership', MembershipController::class . ':showMembershipForm')
         ->setName('membership')
         ->add(RequireLoginMiddleware::class);
