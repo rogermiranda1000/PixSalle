@@ -83,11 +83,10 @@ final class MySQLUserRepository implements UserRepository
 
         // Set default username
         $created = $this->getUserByEmail($email);
-        $created->setUsername("user" . $created->id());
-        $this->modifyUserBasic($created);
+        $this->modifyUserBasic($created->id, 'user' . $created->id, $created->phone);
     }
 
-    public function modifyUserBasic($user): void
+    public function modifyUserBasic($id, $username, $phone): void
     {
         $query = <<<'QUERY'
         UPDATE users SET
@@ -96,10 +95,6 @@ final class MySQLUserRepository implements UserRepository
         QUERY;
 
         $statement = $this->databaseConnection->prepare($query);
-
-        $username = $user->username();
-        $phone = $user->phone();
-        $id = $user->id();
 
         $statement->bindParam('username', $username, PDO::PARAM_STR);
         $statement->bindParam('phone', $phone, PDO::PARAM_STR);
