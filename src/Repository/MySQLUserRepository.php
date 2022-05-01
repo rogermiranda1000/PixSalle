@@ -31,6 +31,18 @@ final class MySQLUserRepository implements UserRepository
         $statement->execute();
     }
 
+    public function getNextUsername(): string {
+        $query = "SELECT CONCAT('user', AUTO_INCREMENT) AS next_username FROM information_schema.TABLES WHERE (TABLE_SCHEMA = (SELECT DATABASE()) AND TABLE_NAME = 'users')";
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->execute();
+
+        $row = $statement->fetch(PDO::FETCH_OBJ);
+        // we'll asume it's always OK
+        return $row->next_username;
+    }
+
     public function getPhotos() {
         $query = <<<'QUERY'
         SELECT photos.uuid, photos.extension, profile.username AS profile_photo_author, uploader.username AS upload_photo_author
@@ -66,7 +78,7 @@ final class MySQLUserRepository implements UserRepository
         $statement = $this->databaseConnection->prepare($query);
 
         $email = $user->email();
-        $username = $user->username();
+        $username = ($user->username() === null) ? $this->getNextUsername() : $user->username();
         $password = $user->password();
         $createdAt = $user->createdAt()->format(self::DATE_FORMAT);
         $updatedAt = $user->updatedAt()->format(self::DATE_FORMAT);
@@ -80,10 +92,6 @@ final class MySQLUserRepository implements UserRepository
         $statement->bindParam('phone', $phone, PDO::PARAM_STR);
 
         $statement->execute();
-
-        // Set default username
-        $created = $this->getUserByEmail($email);
-        $this->modifyUserBasic($created->id, 'user' . $created->id, $created->phone);
     }
 
     public function modifyUserBasic($id, $username, $phone): void

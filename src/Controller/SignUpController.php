@@ -69,7 +69,7 @@ final class SignUpController
             $errors['email'] = "User already exists!";
         }
         if (count($errors) == 0) {
-            $user = new User($data['email'], $data['email'], md5($data['password']), new DateTime(), new DateTime(), null);
+            $user = new User($data['email'], null, md5($data['password']), new DateTime(), new DateTime(), null);
             $this->userRepository->createUser($user);
             return $response->withHeader('Location', '/sign-in')->withStatus(302);
         }

@@ -10,7 +10,7 @@ class User
 {
 
   private int $id;
-  private string $username;
+  private ?string $username;
   private string $email;
   private string $password;
   private Datetime $createdAt;
@@ -19,7 +19,7 @@ class User
 
   public function __construct(
     string $email,
-    string $username,
+    ?string $username,
     string $password,
     Datetime $createdAt,
     Datetime $updatedAt,

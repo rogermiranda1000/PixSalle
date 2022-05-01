@@ -64,3 +64,7 @@ CREATE TABLE `albumphoto`
 
 ALTER TABLE `users`
     ADD `profile_picture` VARCHAR(255) REFERENCES photos(`uuid`);
+
+-- information_schema update
+
+SET GLOBAL information_schema_stats_expiry=0;
