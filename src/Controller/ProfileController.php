@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Salle\PixSalle\Repository\ImageRepository;
 use Salle\PixSalle\Repository\UserRepository;
 use Salle\PixSalle\Model\User;
+use Salle\PixSalle\Service\ValidatorService;
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
 
@@ -15,6 +16,7 @@ class ProfileController
     private Twig $twig;
     private UserRepository $userRepository;
     private ImageRepository $imageRepository;
+    private ValidatorService $validator;
 
     private const ALLOWED_EXTENSIONS = ['jpg', 'png'];
     private const MAXSIZE = 500;
@@ -27,6 +29,7 @@ class ProfileController
         $this->twig = $twig;
         $this->userRepository = $userRepository;
         $this->imageRepository = $imageRepository;
+        $this->validator = new ValidatorService();
     }
     public function showProfileForm(Request $request, Response $response): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
@@ -44,10 +47,14 @@ class ProfileController
     }
 
     public function changeProfile(Request $request, Response $response): Response {
-        $uploadedFile = $request->getUploadedFiles();
+        $uploadedFiles = $request->getUploadedFiles();
         $errors = [];
+        $data = $request->getParsedBody();
 
-        $fileName = $uploadedFile->getClientFilename();
+        foreach ($uploadedFiles['files'] as $uploadedFile) {
+            echo($uploadedFile->getClientFilename());
+        }
+        $fileName = $uploadedFiles['file']->getClientFilename();
         $fileInfo = pathinfo($fileName);
         $format = $fileInfo['extension'];
         $size = getimagesize($fileName);
@@ -56,6 +63,14 @@ class ProfileController
         }
         else if( !$this->isValidDimensions($size)) {
             $errors['image'] = 'The image should be (500 x 500) or less';
+        }
+        $errors['username'] = $this->validator->validateUsername($data['username']);
+        if ($errors['username'] == '') {
+            unset($errors['username']);
+        }
+        $errors['phone'] = $this->validator->validatePhone($data['phone']);
+        if ($errors['phone'] == '') {
+            unset($errors['phone']);
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
@@ -75,6 +90,7 @@ class ProfileController
         }
         $uuid = $this->imageRepository->savePhoto($fileName, $format);
         $this->userRepository->createPhoto($_SESSION['user_id'], $uuid, $format);
+        $image = $this->imageRepository->getPhoto($uuid, $format);
 
 
         return $this->twig->render(
@@ -84,7 +100,8 @@ class ProfileController
                 'formAction' => $routeParser->urlFor('profile'),
                 'username' => $user->username,
                 'email' => $user->email,
-                'phone' => $user->phone
+                'phone' => $user->phone,
+                'profilePicture' => $image
             ]
         );
     }

@@ -33,7 +33,7 @@
         {% endif %}
         <br>
         <br>
-        <input type="file" name="profile-picture" value="Profile picture">
+        <input type="file" name="files[]" multiple>
         {% if formErrors['photo'] %}
             <br>
             <p>{{ formErrors['photo'] }}</p>
