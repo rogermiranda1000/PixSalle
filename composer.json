@@ -22,6 +22,8 @@
     "dflydev/fig-cookies": "^3.0",
     "symfony/dotenv": "^5.2",
     "slim/twig-view": "^3.2",
-    "ext-json": "*"
+    "ext-json": "*",
+    "slim/flash": "^0.4.0",
+    "ramsey/uuid": "^4.3"
   }
 }

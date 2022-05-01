@@ -1,0 +1,22 @@
+{% extends "base.twig" %}
+
+{% block title %}Wallet | PixSalle{% endblock %}
+
+{% block content %}
+<h1>Wallet</h1>
+<p>
+    Current amount: <i>{{money}}</i>&euro;
+</p>
+
+<form action="{{ formAction }}" method="POST">
+	<input type="number" step="0.01" name="amount" />
+	<input type="submit" value="Add to wallet" />
+</form>
+{% if errors is not empty %}
+    <ul class="errors">
+        {% for error in errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

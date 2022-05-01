@@ -16,3 +16,55 @@ CREATE TABLE `users`
     `updatedAt` DATETIME                                                NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- new tables
+
+ALTER TABLE `users`
+    ADD `membership`    enum('cool', 'active')  DEFAULT 'cool';
+ALTER TABLE `users`
+    ADD `wallet`        FLOAT                   DEFAULT 30;
+ALTER TABLE `users`
+    ADD `phone`         VARCHAR(255);
+ALTER TABLE `users`
+    ADD `username`      VARCHAR(255)            NOT NULL UNIQUE;
+
+CREATE TABLE `portfolios`
+(
+    `name`      VARCHAR(255),
+    `user_id`   INT,
+    PRIMARY KEY (`name`),
+    FOREIGN KEY (`user_id`) REFERENCES users(`id`)
+);
+
+CREATE TABLE `albums`
+(
+    `name`              VARCHAR(255),
+    `portfolio_name`    VARCHAR(255),
+    PRIMARY KEY (`name`, `portfolio_name`),
+    FOREIGN KEY (`portfolio_name`) REFERENCES portfolios(`name`)
+);
+
+CREATE TABLE `photos`
+(
+    `uuid`              VARCHAR(255),
+    `extension`         enum('png', 'jpg'),
+    PRIMARY KEY (`uuid`)
+);
+
+CREATE TABLE `albumphoto`
+(
+    `album_name`        VARCHAR(255),
+    `portfolio_name`    VARCHAR(255),
+    `photo_id`          VARCHAR(255),
+    PRIMARY KEY (`album_name`, `portfolio_name`, `photo_id`),
+    FOREIGN KEY (`album_name`) REFERENCES albums(`name`),
+    FOREIGN KEY (`portfolio_name`) REFERENCES portfolios(`name`),
+    FOREIGN KEY (`photo_id`) REFERENCES photos(`uuid`)
+);
+
+ALTER TABLE `users`
+    ADD `profile_picture` VARCHAR(255) REFERENCES photos(`uuid`);
+
+-- information_schema update
+
+SET PERSIST information_schema_stats_expiry = 0;

@@ -1,0 +1,12 @@
+{% extends "base.twig" %}
+
+{% block title %}Explore | PixSalle{% endblock %}
+
+{% block content %}
+<h1>Explore</h1>
+{% for photo in photos %}
+    <img src="{{photo.img}}" alt="{{photo.author}}'s image" height="600" />
+    By {{photo.author}}.
+    <br>
+{% endfor %}
+{% endblock %}
