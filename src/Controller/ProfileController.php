@@ -51,10 +51,12 @@ class ProfileController
         $errors = [];
         $data = $request->getParsedBody();
 
-        foreach ($uploadedFiles['files'] as $uploadedFile) {
-            echo($uploadedFile->getClientFilename());
+        if (count($uploadedFiles['files']) !== 1) {
+            $errors['file'] = 'Only one file is allowed';
         }
-        $fileName = $uploadedFiles['file']->getClientFilename();
+
+        $uploadedFile = $uploadedFiles['files'][0];
+        $fileName = $uploadedFile->getClientFilename();
         $fileInfo = pathinfo($fileName);
         $format = $fileInfo['extension'];
         $size = getimagesize($fileName);
