@@ -187,7 +187,7 @@ final class MySQLUserRepository implements UserRepository
         $statement = $this->databaseConnection->prepare($query);
 
         $statement->bindParam('password', $password, PDO::PARAM_STR);
-        $statement->bindParam('id', $idUser, PDO::PARAM_INT);
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
 
         $statement->execute();
     }

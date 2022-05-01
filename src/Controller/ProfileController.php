@@ -141,14 +141,11 @@ class ProfileController
         if ($errors['newPassword'] == '') {
             unset($errors['newPassword']);
         }
-        if (md5($data['oldPassword']) != $this->userRepository->getUserById($_SESSION['user_id'])['password']) {
-            $errors['repeatPassword'] = 'This is not your actual password';
+        if (md5($data['oldPassword']) != $this->userRepository->getUserById($_SESSION['user_id'])->password) {
+            $errors['confirmPassword'] = 'This is not your actual password';
         }
-        if ($data['oldPassword'] != $data['newPassword']) {
-            $errors['repeatPassword'] = "Repeat password must match new password";
-        }
-        if ($errors['repeatPassword'] == '') {
-            unset($errors['repeatPassword']);
+        if ($data['newPassword'] != $data['confirmPassword']) {
+            $errors['confirmPassword'] = "Repeat password must match new password";
         }
         if (count($errors) > 0) {
             return $this->twig->render(
@@ -156,7 +153,7 @@ class ProfileController
                 'change-password.twig',
                 [
                     'formAction' => $routeParser->urlFor('changePassword'),
-                    'errors' => $errors
+                    'formErrors' => $errors
                 ]
             );
         }
@@ -166,7 +163,8 @@ class ProfileController
             $response,
             'change-password.twig',
             [
-                'formAction' => $routeParser->urlFor('changePassword')
+                'formAction' => $routeParser->urlFor('changePassword'),
+                'done' => 'Password changed!'
             ]
         );
 
