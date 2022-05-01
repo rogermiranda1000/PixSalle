@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Salle\PixSalle\Controller\API\BlogAPIController;
+use Salle\PixSalle\Controller\LandingPageController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
@@ -12,7 +12,7 @@ use Slim\App;
 
 function addRoutes(App $app): void
 {
-    $app->get('/', UserSessionController::class . ':showSignInForm');
+    $app->get('/', LandingPageController::class . ':showLandingPage')->setName('home');
     $app->get('/sign-in', UserSessionController::class . ':showSignInForm')->setName('signIn');
     $app->post('/sign-in', UserSessionController::class . ':signIn');
     $app->get('/logout', UserSessionController::class . ':logout')->setName('logout');

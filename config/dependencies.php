@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
+use Salle\PixSalle\Controller\LandingPageController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
@@ -49,6 +50,13 @@ function addDependencies(ContainerInterface $container): void
     $container->set('user_repository', function (ContainerInterface $container) {
         return new MySQLUserRepository($container->get('db'));
     });
+
+    $container->set(
+        LandingPageController::class,
+        function (ContainerInterface $c) {
+            return new LandingPageController($c->get('view'));
+        }
+    );
 
     $container->set(
         UserSessionController::class,
