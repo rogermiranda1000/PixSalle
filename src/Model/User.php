@@ -26,11 +26,7 @@ class User
     ?string $phone
   ) {
     $this->email = $email;
-    if(empty($username) || !strcmp($email, $username)) {
-        $this->username = substr($email, 0, stripos($email, '@'));
-    } else {
-        $this->username = $username;
-    }
+    $this->username = $username;
     $this->password = $password;
     $this->createdAt = $createdAt;
     $this->updatedAt = $updatedAt;
