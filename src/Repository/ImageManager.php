@@ -40,4 +40,8 @@ final class ImageManager implements ImageRepository {
     public function removePhoto(string $uuid, string $extension): void {
 		unlink($this->base_path . $uuid . '.' . $extension);
 	}
+
+    public function getPath(string $uuid, string $extension): string {
+        return $this->base_path . $uuid . '.' . $extension;
+    }
 }

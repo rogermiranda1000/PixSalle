@@ -54,15 +54,14 @@ class ProfileController
         if (count($uploadedFiles['files']) !== 1) {
             $errors['file'] = 'Only one file is allowed';
         }
+        $uploadedFile = $uploadedFiles['files'][0];
         if ($uploadedFiles['files'][0]->getError() == UPLOAD_ERR_OK) {
-            $uploadedFile = $uploadedFiles['files'][0];
             $fileName = $uploadedFile->getClientFilename();
             $fileInfo = pathinfo($fileName);
             $format = $fileInfo['extension'];
-            /*
             if (!$this->isValidFormat($format)) {
                 $errors['image'] = 'Only png and jpg images are allowed';
-            }*/
+            }
         }
         $errors['username'] = $this->validator->validateUsername($data['username']);
         if ($errors['username'] == '') {
@@ -91,12 +90,12 @@ class ProfileController
             );
         }
         $image = '';
-        if ($uploadedFiles['files'][0]->getError() == UPLOAD_ERR_OK) {
+        if ($uploadedFile->getError() == UPLOAD_ERR_OK) {
             $uuid = $this->imageRepository->savePhoto($uploadedFile); // we need to upload it to know its size
             $size = $this->imageRepository->getPhotoSize($uuid, $format);
-            if (!$this->isValidDimensions($size)) {
+            if (!$this->isValidDimensions($size) || $this->isOverMaxMB($this->imageRepository->getPath($uuid, $format))) {
                 $this->imageRepository->removePhoto($uuid, $format);
-                $errors['image'] = 'The image should be (500 x 500) or less';
+                $errors['image'] = 'The image should be (500 x 500) or less and not more than 1MB';
 
                 return $this->twig->render(
                     $response,
@@ -129,6 +128,10 @@ class ProfileController
 
     private function isValidFormat(string $extension): bool {
         return in_array($extension, self::ALLOWED_EXTENSIONS, true);
+    }
+
+    private function isOverMaxMB($photo): bool {
+        return filesize($photo) > (1 * 1000000);
     }
 
     private function isValidDimensions($dimensions): bool {
