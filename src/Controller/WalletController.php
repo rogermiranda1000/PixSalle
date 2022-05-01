@@ -7,6 +7,7 @@ namespace Salle\PixSalle\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\UserRepository;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
@@ -61,7 +62,8 @@ final class WalletController
             return $this->showWalletForm($request, $response);
         }
 
-        // TODO add money
+        $this->userRepository->modifyWallet($_SESSION['user_id'], $amount);
+
         return $this->showWalletForm($request, $response);
     }
 }
