@@ -42,7 +42,18 @@ final class MySQLBlogRepository implements BlogRepository
         $statement->execute();
     }
 
-    public function getPost(id $post_id): Post {
+    public function getPost(int $post_id): ?Post {
+        $query = "SELECT * FROM post WHERE id = :id";
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('id', $post_id, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
+            return new Post(intval($row->id), $row->title, $row->content, intval($row->user_id));
+        }
         return null;
     }
 
@@ -50,7 +61,7 @@ final class MySQLBlogRepository implements BlogRepository
 
     }
 
-    public function deletePost(id $post_id): void {
+    public function deletePost(int $post_id): void {
 
     }
 }

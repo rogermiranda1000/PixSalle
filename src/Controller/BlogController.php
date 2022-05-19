@@ -25,9 +25,12 @@ final class BlogController
 
     public function getAllPosts(Request $request, Response $response): Response
     {
-        $test = new Post(2, "hello", "world", 1);
+        //$test = new Post(2, "hello", "world", 1);
         //return $response->withJson($test->expose(), 200, JSON_PRETTY_PRINT);
-        $this->blogRepository->post($test);
-        return $response->withJson($this->blogRepository->getAllPosts(), 200, JSON_PRETTY_PRINT);
+
+        //$this->blogRepository->post($test);
+        //return $response->withJson($this->blogRepository->getAllPosts(), 200, JSON_PRETTY_PRINT);
+
+        return $response->withJson($this->blogRepository->getPost(1)->expose(), 200, JSON_PRETTY_PRINT);
     }
 }
