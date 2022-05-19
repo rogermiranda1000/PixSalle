@@ -272,7 +272,7 @@ will no longer appear in the Explore section.
 
 ### Blog
 
-_The user must be logged in, and the functionality is **for all users**._
+_If the user want to create a post he must be logged in._
 
 _This functionality will be tested using cypress. You can check the tests in the cypress folder._
 

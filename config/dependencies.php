@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
 use Salle\PixSalle\Controller\LandingPageController;
+use Salle\PixSalle\Controller\BlogController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\ProfileController;
 use Salle\PixSalle\Controller\MembershipController;
@@ -11,6 +12,7 @@ use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Controller\WalletController;
 use Salle\PixSalle\Repository\MySQLUserRepository;
+use Salle\PixSalle\Repository\MySQLBlogRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
 
@@ -51,6 +53,10 @@ function addDependencies(ContainerInterface $container): void
 
     $container->set('user_repository', function (ContainerInterface $container) {
         return new MySQLUserRepository($container->get('db'));
+    });
+
+    $container->set('blog_repository', function (ContainerInterface $container) {
+        return new MySQLBlogRepository($container->get('db'));
     });
 
     $container->set(
@@ -99,6 +105,13 @@ function addDependencies(ContainerInterface $container): void
         ProfileController::class,
         function (ContainerInterface $c) {
             return new ProfileController($c->get('view'), $c->get('user_repository'), $c->get('image'));
+        }
+    );
+
+    $container->set(
+        BlogController::class,
+        function (ContainerInterface $c) {
+            return new BlogController($c->get('view'), $c->get('blog_repository'));
         }
     );
 }

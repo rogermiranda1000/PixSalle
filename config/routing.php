@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Salle\PixSalle\Controller\LandingPageController;
+use Salle\PixSalle\Controller\BlogController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
@@ -48,4 +49,6 @@ function addRoutes(App $app): void
         ->add(RequireLoginMiddleware::class);
     $app->post('/user/wallet', WalletController::class . ':addToWallet')
         ->add(RequireLoginMiddleware::class);
+
+    $app->get('/api/blog', BlogController::class . ':getAllPosts');
 }
