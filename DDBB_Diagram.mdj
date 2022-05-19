@@ -1698,7 +1698,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGA3gK4y807nkU="
 							},
-							"name": "userId",
+							"name": "user_id",
 							"type": "INTEGER",
 							"foreignKey": true
 						}
