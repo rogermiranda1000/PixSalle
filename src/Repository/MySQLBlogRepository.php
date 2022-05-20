@@ -26,7 +26,19 @@ final class MySQLBlogRepository implements BlogRepository
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function post(Post $post): void {
+    private function getLastAddedPost(): Post {
+        $query = "SELECT * FROM post WHERE id = LAST_INSERT_ID()";
+
+        $statement = $this->databaseConnection->prepare($query);
+        $statement->execute();
+
+        while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
+            return new Post(intval($row->id), $row->title, $row->content, intval($row->user_id));
+        }
+        return null; // shouldn't get here
+    }
+
+    public function post(Post $post): ?Post {
         $query = "INSERT INTO post(title, content, user_id) VALUES(:title, :content, :user_id)";
 
         $statement = $this->databaseConnection->prepare($query);
@@ -40,6 +52,10 @@ final class MySQLBlogRepository implements BlogRepository
         $statement->bindParam('user_id', $user_id, PDO::PARAM_INT);
 
         $statement->execute();
+
+        // TODO FK violation
+
+        return $this->getLastAddedPost();
     }
 
     public function getPost(int $post_id): ?Post {
@@ -75,7 +91,7 @@ final class MySQLBlogRepository implements BlogRepository
         return ($count > 0);
     }
 
-    public function deletePost(int $post_id): void {
+    public function deletePost(int $post_id): bool {
         $query = "DELETE FROM post WHERE id = :id";
 
         $statement = $this->databaseConnection->prepare($query);
@@ -83,5 +99,7 @@ final class MySQLBlogRepository implements BlogRepository
         $statement->bindParam('id', $post_id, PDO::PARAM_INT);
 
         $statement->execute();
+        $count = $statement->rowCount();
+        return ($count > 0);
     }
 }
