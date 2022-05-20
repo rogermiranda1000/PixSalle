@@ -31,6 +31,10 @@ final class BlogController
         //$this->blogRepository->post($test);
         //return $response->withJson($this->blogRepository->getAllPosts(), 200, JSON_PRETTY_PRINT);
 
+        //$this->blogRepository->deletePost(1);
+        
         return $response->withJson($this->blogRepository->getPost(1)->expose(), 200, JSON_PRETTY_PRINT);
+
+        //return $response->withJson($this->blogRepository->updatePost(new Post(2, "uwu", "world")), 200, JSON_PRETTY_PRINT);
     }
 }

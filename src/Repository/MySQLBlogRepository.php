@@ -57,11 +57,31 @@ final class MySQLBlogRepository implements BlogRepository
         return null;
     }
 
-    public function updatePost(Post $post): void {
+    public function updatePost(Post $post): bool {
+        $query = "UPDATE post SET title = :title, content = :content WHERE id = :id";
 
+        $statement = $this->databaseConnection->prepare($query);
+        
+        $id = $post->id();
+        $title = $post->title();
+        $content = $post->content();
+        
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
+        $statement->bindParam('title', $title, PDO::PARAM_STR);
+        $statement->bindParam('content', $content, PDO::PARAM_STR);
+
+        $statement->execute();
+        $count = $statement->rowCount();
+        return ($count > 0);
     }
 
     public function deletePost(int $post_id): void {
+        $query = "DELETE FROM post WHERE id = :id";
 
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('id', $post_id, PDO::PARAM_INT);
+
+        $statement->execute();
     }
 }
