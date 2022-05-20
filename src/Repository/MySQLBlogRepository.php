@@ -51,9 +51,11 @@ final class MySQLBlogRepository implements BlogRepository
         $statement->bindParam('content', $content, PDO::PARAM_STR);
         $statement->bindParam('user_id', $user_id, PDO::PARAM_INT);
 
-        $statement->execute();
-
-        // TODO FK violation
+        try {
+            $statement->execute();
+        } catch (\PDOException $e) {
+            return null;
+        }
 
         return $this->getLastAddedPost();
     }

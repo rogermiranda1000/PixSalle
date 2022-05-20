@@ -20,7 +20,7 @@ final class IntegerIdCheckerMiddleware
         
         if (!is_numeric($id)) {
             $error = [];
-            $error['message'] = "The ID must be a number";
+            $error['message'] = "The post ID must be a number";
 
             $response = new SlimResponse();
             $response->getBody()->write(json_encode($error));
