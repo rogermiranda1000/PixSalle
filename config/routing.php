@@ -60,4 +60,8 @@ function addRoutes(App $app): void
         ->add(IntegerIdCheckerMiddleware::class);
     $app->delete('/api/blog/{id}', BlogApiController::class . ':deletePost')
         ->add(IntegerIdCheckerMiddleware::class);
+       
+    $app->get('/blog', BlogController::class . ':getAllPosts');
+    $app->get('/blog/{id}', BlogController::class . ':getPost')
+        ->add(IntegerIdCheckerMiddleware::class);
 }
