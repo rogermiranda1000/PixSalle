@@ -112,7 +112,7 @@ function addDependencies(ContainerInterface $container): void
     $container->set(
         BlogController::class,
         function (ContainerInterface $c) {
-            return new BlogController($c->get('view'), $c->get('blog_repository'));
+            return new BlogController($c->get('view'), $c->get('user_repository'), $c->get('blog_repository'));
         }
     );
 

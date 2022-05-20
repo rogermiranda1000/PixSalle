@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 use Salle\PixSalle\Model\Post;
 
+use Salle\PixSalle\Repository\UserRepository;
 use Salle\PixSalle\Repository\BlogRepository;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
@@ -16,25 +17,42 @@ use Slim\Views\Twig;
 final class BlogController
 {
     private Twig $twig;
+    private UserRepository $userRepository;
     private BlogRepository $blogRepository;
 
-    public function __construct(Twig $twig, BlogRepository $blogRepository) {
+    public function __construct(Twig $twig, UserRepository $userRepository, BlogRepository $blogRepository) {
         $this->twig = $twig;
+        $this->userRepository = $userRepository;
         $this->blogRepository = $blogRepository;
     }
 
     public function getAllPosts(Request $request, Response $response): Response
     {
-        //$test = new Post(2, "hello", "world", 1);
-        //return $response->withJson($test->expose(), 200, JSON_PRETTY_PRINT);
+        return $this->twig->render(
+            $response,
+            'blog.twig',
+            [
+                'posts' => $this->blogRepository->getAllPosts()
+            ]
+        );
+    }
 
-        //$this->blogRepository->post($test);
-        //return $response->withJson($this->blogRepository->getAllPosts(), 200, JSON_PRETTY_PRINT);
+    public function getPost(Request $request, Response $response, array $args): Response
+    {
+        $post = $this->blogRepository->getPost(intval($args['id']));
+        $author = null;
+        if ($post !== null) {
+            $user = $this->userRepository->getUserById($post->user_id());
+            $author = $user->username;
+        }
 
-        //$this->blogRepository->deletePost(1);
-        
-        return $response->withJson($this->blogRepository->getPost(1)->expose(), 200, JSON_PRETTY_PRINT);
-
-        //return $response->withJson($this->blogRepository->updatePost(new Post(2, "uwu", "world")), 200, JSON_PRETTY_PRINT);
+        return $this->twig->render(
+            $response,
+            'post.twig',
+            [
+                'post' => $post,
+                'author' => $author
+            ]
+        );
     }
 }

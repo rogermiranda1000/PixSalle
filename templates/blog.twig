@@ -1,0 +1,14 @@
+{% extends "base.twig" %}
+
+{% block title %}Explore | PixSalle{% endblock %}
+
+{% block content %}
+<h1>Blog</h1>
+<div id="blog-list">
+    {% for post in posts %}
+        <div>
+            <a href="/blog/{{post.id}}">{{post.title}}</a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
