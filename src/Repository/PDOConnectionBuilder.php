@@ -27,6 +27,7 @@ final class PDOConnectionBuilder
 
         $pdoConnection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         $pdoConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdoConnection->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true); // https://stackoverflow.com/a/43180308/9178470
 
         return $pdoConnection;
     }
