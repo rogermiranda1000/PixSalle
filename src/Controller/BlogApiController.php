@@ -27,8 +27,7 @@ final class BlogApiController
 
     public function insertPost(Request $request, Response $response): Response
     {
-        $json = $app->request->getBody();
-        $data = json_decode($json, true);
+        $data = $request->getParsedBody();
 
         if (!isset($data['userId']) || empty($data['userId']) || !isset($data['title']) || empty($data['title']) || !isset($data['content']) || empty($data['content'])) {
             $error = [];
@@ -36,7 +35,7 @@ final class BlogApiController
             return $response->withJson($error, 400, JSON_PRETTY_PRINT);
         }
 
-        $post = $this->blogRepository->post(new Post(-1, $data['title'], $data['content'], $data['userId'])));
+        $post = $this->blogRepository->post(new Post(-1, $data['title'], $data['content'], $data['userId']));
         return $response->withJson($post->expose(), 200, JSON_PRETTY_PRINT);
     }
 
@@ -55,8 +54,7 @@ final class BlogApiController
 
     public function updatePost(Request $request, Response $response): Response
     {
-        $json = $app->request->getBody();
-        $data = json_decode($json, true);
+        $data = $request->getParsedBody();
 
         $error = [];
         if (!isset($data['title']) || empty($data['title']) || !isset($data['content']) || empty($data['content'])) {
