@@ -7,28 +7,24 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
 
-    {% block head %}
+    {% block styles %}
       <link rel="stylesheet" href="{{ full_url_for('home') }}assets/css/styles.css"/>
     {% endblock %}
 
   </head>
   <body>
     <!-- NAV BAR -->
-    <header>
-      <div id="navbar">
-        <ul>
-          <li><a href="/">About Us</a></li>
-          <li><a href="/sign-in">Sign In</a></li>
-          <li><a href="/sign-up">Sign Up</a></li>
-          <li><a href="/logout">Log Out</a></li>
-          <li><a href="/user/membership">Membership</a></li>
-          <li><a href="/portfolio">Portfolio</a></li>
-          <li><a href="/user/wallet">Wallet</a></li>
-          <li><a href="/explore">Explore</a></li>
-        </ul>
-      </div>
-    </header>
-
+    {% block header %}
+      <header>
+        <div id="navbar">
+          <ul>
+            <li><a href="/">About Us</a></li>
+            <li><a href="/sign-in">Sign In</a></li>
+            <li><a href="/sign-up">Sign Up</a></li>
+          </ul>
+        </div>
+      </header>
+    {% endblock %}
     <!-- Body -->
     <main>
       {% block content %}
@@ -36,10 +32,12 @@
     </main>
 
     <!-- Footer -->
-    <footer>
-      <div class = "footer">
-        <p>Copyright ©2022-2030 PixSalle</p>
-      </div>
-    </footer>
+    {% block footer %}
+      <footer>
+        <div class = "footer">
+          <p>Copyright ©2022-2030 PixSalle</p>
+        </div>
+      </footer>
+    {% endblock %}
   </body>
 </html>

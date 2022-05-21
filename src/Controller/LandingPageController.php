@@ -18,6 +18,9 @@ final class LandingPageController
 
     public function showLandingPage(Request $request, Response $response)
     {
-        return $this->twig->render($response, 'landing-page.twig', []);
+        if (empty($_SESSION['user_id'])) {
+            return $this->twig->render($response, 'landing-page.twig', []);
+        }
+        return $this->twig->render($response, 'landing-page-in.twig', []);
     }
 }
