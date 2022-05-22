@@ -6,7 +6,7 @@ class Album
 {
     private string $name;
     private int $id;
-    private AlbumPhoto $photo;
+    private ?AlbumPhoto $photo;
 
     public function __construct(string $name, int $id) {
         $this->name = $name;
@@ -26,7 +26,7 @@ class Album
         return $this->id;
     }
 
-    public function photo(): AlbumPhoto {
+    public function photo(): ?AlbumPhoto {
         return $this->photo;
     }
 }
