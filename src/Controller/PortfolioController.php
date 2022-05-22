@@ -59,10 +59,13 @@ final class PortfolioController
 
         foreach ($albums_array as $album)
         {
+            $img = $album->photo();
+            if ($img !== null) $img = $img->url();
+
             array_push($albums, [
                 'id' => $album->id(),
                 'name' => $album->name(),
-                'img' => $album->photo()
+                'img' => $img
             ]);
         }
 
