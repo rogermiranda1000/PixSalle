@@ -11,6 +11,8 @@ interface UserRepository
 {
     public function createUser(User $user): void;
     public function getUserByEmail(string $email);
+    public function changePassword(int $id, string $password);
+    public function modifyUserBasic($id, $username, $phone): void;
 
     //Wallet
     public function modifyWallet(int $id, float $amount): void;
@@ -21,4 +23,5 @@ interface UserRepository
 
     // explore
     public function getPhotos();
+    public function createPhoto($idUser, $uuid, $extension);
 }

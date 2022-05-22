@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
 use Salle\PixSalle\Controller\LandingPageController;
-use Salle\PixSalle\Controller\PortfolioController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
@@ -99,6 +98,27 @@ function addDependencies(ContainerInterface $container): void
         ExploreController::class,
         function (ContainerInterface $c) {
             return new ExploreController($c->get('view'), $c->get('user_repository'), $c->get('image'));
+        }
+    );
+
+    $container->set(
+        ProfileController::class,
+        function (ContainerInterface $c) {
+            return new ProfileController($c->get('view'), $c->get('user_repository'), $c->get('image'));
+        }
+    );
+
+    $container->set(
+        BlogController::class,
+        function (ContainerInterface $c) {
+            return new BlogController($c->get('view'), $c->get('user_repository'), $c->get('blog_repository'));
+        }
+    );
+
+    $container->set(
+        BlogApiController::class,
+        function (ContainerInterface $c) {
+            return new BlogApiController($c->get('blog_repository'));
         }
     );
 }

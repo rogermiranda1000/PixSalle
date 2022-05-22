@@ -62,5 +62,19 @@ CREATE TABLE `albumphoto`
     FOREIGN KEY (`photo_id`) REFERENCES photos(`uuid`)
 );
 
+CREATE TABLE `post`
+(
+    `id`        INT              NOT NULL AUTO_INCREMENT,
+    `title`     VARCHAR(255)     NOT NULL,
+    `content`   VARCHAR(255)     NOT NULL,
+    `user_id`   INT              NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES users(`id`)
+);
+
 ALTER TABLE `users`
     ADD `profile_picture` VARCHAR(255) REFERENCES photos(`uuid`);
+
+-- information_schema update
+
+SET PERSIST information_schema_stats_expiry = 0;
