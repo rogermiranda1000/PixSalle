@@ -23,7 +23,17 @@ function addRoutes(App $app): void
     $app->get('/sign-up', SignUpController::class . ':showSignUpForm')->setName('signUp');
     $app->post('/sign-up', SignUpController::class . ':signUp');
 
-    
+    $app->get('/profile', ProfileController::class . ':showProfileForm')
+        ->setName('profile')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/profile', ProfileController::class . ':changeProfile')
+        ->add(RequireLoginMiddleware::class);
+    $app->get('/profile/changePassword', ProfileController::class . ':showChangePasswordForm')
+        ->setName('changePassword')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/profile/changePassword', ProfileController::class . ':changePassword')
+        ->add(RequireLoginMiddleware::class);
+
     $app->get('/user/membership', MembershipController::class . ':showMembershipForm')
         ->setName('membership')
         ->add(RequireLoginMiddleware::class);
