@@ -5,9 +5,9 @@ namespace Salle\PixSalle\Model;
 class AlbumPhoto
 {
     private string $url;
-    private int $id;
+    private string $id;
 
-    public function __construct(string $url, int $id) {
+    public function __construct(string $url, string $id) {
         $this->url = $url;
         $this->id = $id;
     }
@@ -16,7 +16,7 @@ class AlbumPhoto
         return $this->url;
     }
 
-    public function id(): int {
+    public function id(): string {
         return $this->id;
     }
 }

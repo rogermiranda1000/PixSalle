@@ -44,12 +44,13 @@ function addRoutes(App $app): void
         ->add(RequireLoginMiddleware::class);
 
     $app->get('/portfolio/album/{id}', AlbumController::class . ':showAlbum')
-        ->setName('album')
-        ->add(RequireLoginMiddleware::class);
-    $app->post('/portfolio/album/{id}', AlbumController::class . ':createAlbum')
-        ->add(RequireLoginMiddleware::class);
+        ->add(RequireLoginMiddleware::class)
+        ->add(IntegerIdCheckerMiddleware::class);
+    $app->post('/portfolio/album/{id}', AlbumController::class . ':uploadPhoto')
+        ->add(RequireLoginMiddleware::class)
+        ->add(IntegerIdCheckerMiddleware::class);
     $app->delete('/portfolio/album/{id}', AlbumController::class . ':deleteAlbum')
-        ->add(RequireLoginMiddleware::class);
+        ->add(IntegerIdCheckerMiddleware::class);
 
     $app->get('/explore', ExploreController::class . ':showImages')
         ->setName('explore')

@@ -3,9 +3,30 @@
 {% block title %}Album | PixSalle{% endblock %}
 
 {% block content %}
-    <h1>{{album}}</h1>
+    <h1>
+        {{album}}
+    </h1>
+    {% if not disable %}
+    <form action="{{ formAction }}" method="DELETE">
+        <input type="submit" value="Delete Album">
+    </form>
+    <br>
+    <form action="{{ formAction }}" method="POST">
+        <label for="imageUrl"> Add image - Image URL:</label>
+        <br>
+        <input type="text" name="imageUrl">
+        <br>
+        <input type="submit" value="Add image">
+    </form>
+    <br>
+
     {% for photo in photos %}
-        <img src="{{photo.img}}" alt="Album photo" height="400" />
+        <img src="{{photo.url}}" alt="Album photo" height="400" />
+        <br>
+        <button imageId="{{ photo.id }}">Delete Photo</button>
+        <br>
         <br>
     {% endfor %}
+
+    {% endif %}
 {% endblock %}

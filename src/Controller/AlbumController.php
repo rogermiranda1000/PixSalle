@@ -24,51 +24,49 @@ class AlbumController
         $this->flash = $flash;
     }
 
-    public function showAlbum(Request $request, Response $response): Response
+
+    public function showAlbum(Request $request, Response $response, array $args): Response
     {
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        $user = $this->albumRepository->getUserById($_SESSION['user_id']);
+        $album = intval($args['id']);
+        $photos = $this->albumRepository->getAlbumPhotos($album);
+        $albumName = $this->albumRepository->getAlbumName($album);
+        $disable = false;
+        if ($albumName == '') {
+            $albumName = "This album does not exist";
+            $disable = true;
+        }
         return $this->twig->render(
             $response,
-            'profile.twig',
+            'album.twig',
             [
-                'formAction' => $routeParser->urlFor('profile'),
-                'username' => $user->username,
-                'email' => $user->email,
-                'phone' => $user->phone
+                'album' => $albumName,
+                'formAction' => '/portfolio/album/'.$album,
+                'photos' => $photos,
+                'disable' => $disable
             ]
         );
     }
 
-    public function deleteAlbum(Request $request, Response $response): Response
+    public function deleteAlbum(Request $request, Response $response, array $args): Response
     {
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        $user = $this->userRepository->getUserById($_SESSION['user_id']);
-        return $this->twig->render(
-            $response,
-            'profile.twig',
-            [
-                'formAction' => $routeParser->urlFor('profile'),
-                'username' => $user->username,
-                'email' => $user->email,
-                'phone' => $user->phone
-            ]
-        );
+        $album = intval($args['id']);
+        $data = $request->getParsedBody();
+        if ($data['id'] == null) {
+            $this->albumRepository->deleteAlbum($album);
+        } else {
+            $photo_id = $data['id'];
+            $this->albumRepository->deletePhoto($album, $photo_id);
+        }
+        return $this->showAlbum($request, $response, $args);
     }
 
-    public function createAlbum(Request $request, Response $response): Response
+    public function uploadPhoto(Request $request, Response $response, array $args): Response
     {
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        $user = $this->userRepository->getUserById($_SESSION['user_id']);
-        return $this->twig->render(
-            $response,
-            'profile.twig',
-            [
-                'formAction' => $routeParser->urlFor('profile'),
-                'username' => $user->username,
-                'email' => $user->email,
-                'phone' => $user->phone
-            ]
-        );
+        $album = intval($args['id']);
+        $url = $request->getParsedBody()['imageUrl'];
+
+        $this->albumRepository->addPhoto($album, $url);
+
+        return $this->showAlbum($request, $response, $args);
     }
 }
