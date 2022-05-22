@@ -16,6 +16,7 @@ use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\MySQLBlogRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
+use Salle\PixSalle\Controller\AlbumController;
 
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
@@ -85,6 +86,13 @@ function addDependencies(ContainerInterface $container): void
         MembershipController::class,
         function (ContainerInterface $c) {
             return new MembershipController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
+        }
+    );
+
+    $container->set(
+        AlbumController::class,
+        function (ContainerInterface $c) {
+            return new AlbumController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
         }
     );
 

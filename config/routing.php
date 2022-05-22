@@ -13,6 +13,7 @@ use Salle\PixSalle\Controller\WalletController;
 use Salle\PixSalle\Middleware\RequireLoginMiddleware;
 use Salle\PixSalle\Middleware\IntegerIdCheckerMiddleware;
 use Salle\PixSalle\Controller\ProfileController;
+use Salle\PixSalle\Controller\AlbumController;
 use Slim\App;
 
 function addRoutes(App $app): void
@@ -40,6 +41,14 @@ function addRoutes(App $app): void
         ->setName('membership')
         ->add(RequireLoginMiddleware::class);
     $app->post('/user/membership', MembershipController::class . ':applyMembership')
+        ->add(RequireLoginMiddleware::class);
+
+    $app->get('/portfolio/album/{id}', AlbumController::class . ':showAlbum')
+        ->setName('album')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/portfolio/album/{id}', AlbumController::class . ':createAlbum')
+        ->add(RequireLoginMiddleware::class);
+    $app->delete('/portfolio/album/{id}', AlbumController::class . ':deleteAlbum')
         ->add(RequireLoginMiddleware::class);
 
     $app->get('/explore', ExploreController::class . ':showImages')
