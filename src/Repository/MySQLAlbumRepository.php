@@ -168,6 +168,9 @@ final class MySQLAlbumRepository implements AlbumRepository
                 $album->setPhoto($photo);
 
                 array_push($results, $album);
+            } else {
+                $album = new Album($photo_row->url, intval($photo_row->id));
+                array_push($results, $album);
             }
         }
         return $results;
