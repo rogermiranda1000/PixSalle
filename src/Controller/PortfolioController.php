@@ -28,4 +28,24 @@ final class PortfolioController
     {
         return $this->twig->render($response, 'portfolio.twig', []);
     }
+
+    public function addToPortfolio(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        if (!is_numeric($data['amount'])) {
+            $this->flash->addMessageNow('errors', 'Please enter a number.');
+            return $this->showWalletForm($request, $response);
+        }
+
+        $amount = floatval($data['amount']);
+        if ($amount <= 0) {
+            $this->flash->addMessageNow('errors', 'Please enter a positive number.');
+            return $this->showWalletForm($request, $response);
+        }
+
+        $this->userRepository->modifyWallet($_SESSION['user_id'], $amount);
+
+        return $this->showWalletForm($request, $response);
+    }
 }
