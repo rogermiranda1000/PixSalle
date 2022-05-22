@@ -21,8 +21,11 @@
     <br>
 
     {% for photo in photos %}
-        <img src="{{photo.url}}" alt="Album photo" height="400" />
+
+        <div class = "col-sm-4 objetfit">
+        <img src="{{photo.url}}" alt="Album photo" />
         <br>
+        </div>
         <button imageId="{{ photo.id }}">Delete Photo</button>
         <br>
         <br>
