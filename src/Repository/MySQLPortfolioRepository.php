@@ -46,9 +46,25 @@ final class MySQLPortfolioRepository implements PortfolioRepository
 
         $count = $statement->rowCount();
         if ($count > 0) {
-            $row = $statement->fetch(PDO::FETCH_OBJ);
-            return $row;
+            $portfolio = $statement->fetch(PDO::FETCH_OBJ);
+            return $portfolio;
         }
         return null;
+    }
+
+    public function getPortfolioNameByUserId(int $user_id)
+    {
+        $query = "SELECT portfolio.name AS name FROM portfolios AS portfolio WHERE user_id = :user_id";
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('user_id', $user_id, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $row = $statement->fetch(PDO::FETCH_OBJ);
+
+        // we'll asume it's always OK
+        return $row->name;
     }
 }

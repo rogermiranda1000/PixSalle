@@ -4,4 +4,15 @@
 
 {% block content %}
     <h1>Portfolio</h1>
+    {% for photo in photos %}
+        <div class = "col-sm-4 objetfit">
+            {% if photo.img is not null %}
+                <img src="{{photo.img}}" alt="{{photo.name}}'s image"/>
+            {% else %}
+                <img src="../public/assets/images/empty.jpg" alt="{{photo.name}}'s image"/>
+            {% endif %}
+        </div>
+        By {{photo.author}}.
+        <br>
+    {% endfor %}
 {% endblock %}

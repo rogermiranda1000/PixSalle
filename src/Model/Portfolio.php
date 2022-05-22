@@ -13,11 +13,13 @@ class Portfolio {
         $this->user_id = $user_id;
     }
 
-    public function name() {
+    public function name(): string
+    {
         return $this->name;
     }
 
-    public function user_id() {
+    public function user_id(): string
+    {
         return $this->user_id;
     }
 }

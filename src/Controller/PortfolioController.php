@@ -43,28 +43,81 @@ final class PortfolioController
             return $this->twig->render($response, 'portfolio-create.twig', []);
         }
 
-        // If the user have a portfolio
-        $photos = array();
+        // If the user doesn't have albums created
+        $albums_array = $this->albumRepository->getAlbums($_SESSION['user_id']);
+        if(empty($albums_array))
+        {
+            return $this->twig->render($response, 'portfolio-empty.twig', []);
+        }
 
-        /*
-         * foreach ($this->albumRepository->FunctionCarles as $album) {
-            array_push($photos, [
+        // If the user have albums created
+        $albums = array();
+
+        foreach ($albums_array as $album)
+        {
+            array_push($albums, [
                 'name' => $album->name(),
-                'img' => $this->imageRepository->getPhoto($img->uuid(), $img->extension())
+                'img' => $album->photo()
             ]);
         }
-        */
 
         return $this->twig->render(
             $response,
             'portfolio.twig',
             [
-                'photos' => $photos
+                'albums' => $albums
             ]
         );
     }
 
+    public function postPortfolio(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        if(array_key_exists('p_name', $data)){
+            return $this->createPortfolio($request, $response);
+        }
+
+        return $this->createAlbum($request, $response);
+    }
+
     public function createPortfolio(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $errors = [];
+
+        $errors['p_name'] = $this->validator->validateUsername($data['p_name']);
+
+        if ($errors['p_name'] == '') {
+            unset($errors['p_name']);
+        }
+
+        $savedPortfolio = $this->portfolioRepository->getPortfolioByUserId($_SESSION['user_id']);
+
+        if ($savedPortfolio != null) {
+            return $response->withHeader('Location', '/portfolio')->withStatus(302);
+        }
+
+        if (count($errors) == 0) {
+            $portfolio = new Portfolio($data['p_name'], strval($_SESSION['user_id']));
+            $this->portfolioRepository->createPortfolio($portfolio);
+            return $response->withHeader('Location', '/portfolio')->withStatus(302);
+        }
+
+        return $this->twig->render(
+            $response,
+            'portfolio-create.twig',
+            [
+                'formErrors' => $errors,
+                'formData' => $data,
+                'formAction' => $routeParser->urlFor('portfolio')
+            ]
+        );
+    }
+
+    public function createAlbum(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
@@ -77,21 +130,15 @@ final class PortfolioController
             unset($errors['name']);
         }
 
-        $savedPortfolio = $this->portfolioRepository->getPortfolioByUserId($_SESSION['user_id']);
-
-        if ($savedPortfolio != null) {
-            return $response->withHeader('Location', '/portfolio')->withStatus(302);
-        }
-
         if (count($errors) == 0) {
-            $portfolio = new Portfolio($data['name'], strval($_SESSION['user_id']));
-            $this->portfolioRepository->createPortfolio($portfolio);
+            $portfolio = $this->portfolioRepository->getPortfolioNameByUserId($_SESSION['user_id']);
+            $this->albumRepository->addAlbum($data['name'], strval($portfolio));
             return $response->withHeader('Location', '/portfolio')->withStatus(302);
         }
 
         return $this->twig->render(
             $response,
-            'portfolio-create.twig',
+            'portfolio.twig',
             [
                 'formErrors' => $errors,
                 'formData' => $data,

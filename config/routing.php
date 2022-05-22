@@ -45,9 +45,9 @@ function addRoutes(App $app): void
     $app->get('/portfolio', PortfolioController::class . ':showPortfolioPage')
         ->setName('portfolio')
         ->add(RequireLoginMiddleware::class);
-    $app->post('/portfolio', PortfolioController::class . ':createPortfolio')
-        ->setName('portfolio')
+    $app->post('/portfolio', PortfolioController::class . ':postPortfolio')
         ->add(RequireLoginMiddleware::class);
+
     $app->get('/portfolio/album/{id}', AlbumController::class . ':showAlbum')
         ->add(RequireLoginMiddleware::class)
         ->add(IntegerIdCheckerMiddleware::class);

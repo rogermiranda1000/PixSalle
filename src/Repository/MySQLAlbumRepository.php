@@ -140,8 +140,8 @@ final class MySQLAlbumRepository implements AlbumRepository
 
     public function getAlbums(int $user) {
         $query = <<<'QUERY'
-        SELECT album.id AS id, album.name AS name
-        FROM albums AS album LEFT JOIN portfolios ON albums.portfolio_name = portfolios.name
+        SELECT album.portfolio_name AS portfolio, album.name AS name
+        FROM albums AS album LEFT JOIN portfolios ON album.portfolio_name = portfolios.name
         WHERE portfolios.user_id = :user
         QUERY;
 
