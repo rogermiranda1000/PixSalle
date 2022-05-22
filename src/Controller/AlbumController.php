@@ -24,6 +24,27 @@ class AlbumController
         $this->flash = $flash;
     }
 
+    private function createQRGuzzle($url, $id)
+    {
+        $client = new \GuzzleHttp\Client();
+        $request = $client->request('POST', 'http://barcode/barcodegenerator',
+            ['headers' =>
+                [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'image/png',
+                ],
+                'json' =>
+                    [
+                        'symbology' => 'QRCode',
+                        'code' => $url
+                    ]
+                ]
+        );
+        $response = $request->getBody();
+        $path = 'assets/qrcodes/album_'.$id.'_qr.png';
+        file_put_contents($path,$response);
+        return $path;
+    }
 
     public function showAlbum(Request $request, Response $response, array $args): Response
     {
@@ -66,6 +87,14 @@ class AlbumController
         $url = $request->getParsedBody()['imageUrl'];
 
         $this->albumRepository->addPhoto($album, $url);
+        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+            $url = "https://";
+        else
+            $url = "http://";
+        $url.= $_SERVER['HTTP_HOST'];
+        $url.= $_SERVER['REQUEST_URI'];
+
+        $this->createQRGuzzle($url, $album);
 
         return $this->showAlbum($request, $response, $args);
     }
