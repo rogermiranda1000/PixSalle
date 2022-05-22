@@ -13,6 +13,7 @@ use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Controller\WalletController;
+use Salle\PixSalle\Repository\MySQLPortfolioRepository;
 use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
@@ -56,6 +57,10 @@ function addDependencies(ContainerInterface $container): void
         return new MySQLUserRepository($container->get('db'));
     });
 
+    $container->set('portfolio_repository', function (ContainerInterface $container) {
+        return new MySQLPortfolioRepository($container->get('db'));
+    });
+
     $container->set(
         LandingPageController::class,
         function (ContainerInterface $c) {
@@ -87,7 +92,7 @@ function addDependencies(ContainerInterface $container): void
     $container->set(
         PortfolioController::class,
         function (ContainerInterface $c) {
-            return new PortfolioController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
+            return new PortfolioController($c->get('view'), $c->get('portfolio_repository'), $c->get("flash"));
         }
     );
 

@@ -7,7 +7,9 @@ namespace Salle\PixSalle\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use Salle\PixSalle\Repository\UserRepository;
+use Salle\PixSalle\Model\Portfolio;
+use Salle\PixSalle\Repository\PortfolioRepository;
+use Salle\PixSalle\Service\ValidatorService;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
@@ -15,37 +17,60 @@ use Slim\Flash\Messages;
 final class PortfolioController
 {
     private Twig $twig;
-    private UserRepository $userRepository;
+    private ValidatorService $validator;
+    private PortfolioRepository $portfolioRepository;
     private Messages $flash;
 
-    public function __construct(Twig $twig, UserRepository $userRepository, Messages $flash) {
+    public function __construct(Twig $twig, PortfolioRepository $portfolioRepository, Messages $flash) {
         $this->twig = $twig;
-        $this->userRepository = $userRepository;
+        $this->portfolioRepository = $portfolioRepository;
         $this->flash = $flash;
+        $this->validator = new ValidatorService();
     }
 
     public function showPortfolioPage(Request $request, Response $response)
     {
+        $portfolio = $this->portfolioRepository->getPortfolioByUserId($_SESSION['user_id']);
+        if($portfolio === null)
+        {
+            return $this->twig->render($response, 'portfolio-create.twig', []);
+        }
         return $this->twig->render($response, 'portfolio.twig', []);
     }
 
-    public function addToPortfolio(Request $request, Response $response): Response
+    public function createPortfolio(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        if (!is_numeric($data['amount'])) {
-            $this->flash->addMessageNow('errors', 'Please enter a number.');
-            return $this->showWalletForm($request, $response);
+        $errors = [];
+
+        $errors['name'] = $this->validator->validateUsername($data['name']);
+
+        if ($errors['name'] == '') {
+            unset($errors['name']);
         }
 
-        $amount = floatval($data['amount']);
-        if ($amount <= 0) {
-            $this->flash->addMessageNow('errors', 'Please enter a positive number.');
-            return $this->showWalletForm($request, $response);
+        $savedPortfolio = $this->portfolioRepository->getPortfolioByUserId($_SESSION['user_id']);
+
+        if ($savedPortfolio != null) {
+            return $response->withHeader('Location', '/portfolio')->withStatus(302);
         }
 
-        $this->userRepository->modifyWallet($_SESSION['user_id'], $amount);
+        if (count($errors) == 0) {
+            $portfolio = new Portfolio($data['name'], strval($_SESSION['user_id']));
+            $this->portfolioRepository->createPortfolio($portfolio);
+            return $response->withHeader('Location', '/portfolio')->withStatus(302);
+        }
 
-        return $this->showWalletForm($request, $response);
+        return $this->twig->render(
+            $response,
+            'portfolio-create.twig',
+            [
+                'formErrors' => $errors,
+                'formData' => $data,
+                'formAction' => $routeParser->urlFor('portfolio')
+            ]
+        );
     }
 }

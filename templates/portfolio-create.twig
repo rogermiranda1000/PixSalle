@@ -1,0 +1,21 @@
+{% extends "base_in.twig" %}
+
+{% block title %}Create Portfolio | PixSalle{% endblock %}
+
+{% block content %}
+    <h1>Create Portfolio</h1>
+
+    <form action="{{ formAction }}" method="POST">
+        <p>Portfolio Name: </p>
+        <input type="text" id="name" name="name">
+        <input type="submit" value="Create" />
+    </form>
+
+    {% if errors is not empty %}
+    <ul class="errors">
+        {% for error in errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

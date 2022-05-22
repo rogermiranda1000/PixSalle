@@ -24,7 +24,6 @@ function addRoutes(App $app): void
     $app->get('/logout', UserSessionController::class . ':logout')->setName('logout');
     $app->get('/sign-up', SignUpController::class . ':showSignUpForm')->setName('signUp');
     $app->post('/sign-up', SignUpController::class . ':signUp');
-
     $app->get('/profile', ProfileController::class . ':showProfileForm')
         ->setName('profile')
         ->add(RequireLoginMiddleware::class);
@@ -52,7 +51,11 @@ function addRoutes(App $app): void
     $app->post('/user/wallet', WalletController::class . ':addToWallet')
         ->add(RequireLoginMiddleware::class);
 
+    // Portfolio
     $app->get('/portfolio', PortfolioController::class . ':showPortfolioPage')
+        ->setName('portfolio')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/portfolio', PortfolioController::class . ':createPortfolio')
         ->setName('portfolio')
         ->add(RequireLoginMiddleware::class);
 
