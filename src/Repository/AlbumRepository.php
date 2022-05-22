@@ -12,4 +12,5 @@ interface AlbumRepository {
     public function deletePhoto(int $album, int $photo);
     public function deleteAlbum(int $album);
     public function addAlbum(string $name, string $portfolio);
+    public function getAlbums(int $user);
 }
