@@ -2,14 +2,19 @@
 
 declare(strict_types=1);
 
+use Salle\PixSalle\Controller\BlogApiController;
+use Salle\PixSalle\Controller\BlogController;
 use Salle\PixSalle\Controller\LandingPageController;
+use Salle\PixSalle\Controller\PortfolioController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Controller\WalletController;
 use Salle\PixSalle\Middleware\RequireLoginMiddleware;
+use Salle\PixSalle\Middleware\IntegerIdCheckerMiddleware;
 use Salle\PixSalle\Controller\ProfileController;
+use Salle\PixSalle\Controller\AlbumController;
 use Slim\App;
 
 function addRoutes(App $app): void
@@ -20,7 +25,6 @@ function addRoutes(App $app): void
     $app->get('/logout', UserSessionController::class . ':logout')->setName('logout');
     $app->get('/sign-up', SignUpController::class . ':showSignUpForm')->setName('signUp');
     $app->post('/sign-up', SignUpController::class . ':signUp');
-
     $app->get('/profile', ProfileController::class . ':showProfileForm')
         ->setName('profile')
         ->add(RequireLoginMiddleware::class);
@@ -32,12 +36,32 @@ function addRoutes(App $app): void
     $app->post('/profile/changePassword', ProfileController::class . ':changePassword')
         ->add(RequireLoginMiddleware::class);
 
-
     $app->get('/user/membership', MembershipController::class . ':showMembershipForm')
         ->setName('membership')
         ->add(RequireLoginMiddleware::class);
     $app->post('/user/membership', MembershipController::class . ':applyMembership')
         ->add(RequireLoginMiddleware::class);
+
+    $app->get('/portfolio', PortfolioController::class . ':showPortfolioPage')
+        ->setName('portfolio')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/portfolio', PortfolioController::class . ':postPortfolio')
+        ->add(RequireLoginMiddleware::class);
+
+    $app->get('/portfolio/album/{id}', AlbumController::class . ':showAlbum')
+        ->add(RequireLoginMiddleware::class)
+        ->add(IntegerIdCheckerMiddleware::class);
+    $app->post('/portfolio/album/qr/{id}', AlbumController::class . ':createQr')
+        ->add(RequireLoginMiddleware::class)
+        ->add(IntegerIdCheckerMiddleware::class);
+    $app->get('/portfolio/album/qr/{id}', AlbumController::class . ':downloadQr')
+        ->add(RequireLoginMiddleware::class)
+        ->add(IntegerIdCheckerMiddleware::class);
+    $app->post('/portfolio/album/{id}', AlbumController::class . ':uploadPhoto')
+        ->add(RequireLoginMiddleware::class)
+        ->add(IntegerIdCheckerMiddleware::class);
+    $app->delete('/portfolio/album/{id}', AlbumController::class . ':deleteAlbum')
+        ->add(IntegerIdCheckerMiddleware::class);
 
     $app->get('/explore', ExploreController::class . ':showImages')
         ->setName('explore')
@@ -48,4 +72,17 @@ function addRoutes(App $app): void
         ->add(RequireLoginMiddleware::class);
     $app->post('/user/wallet', WalletController::class . ':addToWallet')
         ->add(RequireLoginMiddleware::class);
+
+    $app->get('/api/blog', BlogApiController::class . ':getAllPosts');
+    $app->post('/api/blog', BlogApiController::class . ':insertPost');
+    $app->get('/api/blog/{id}', BlogApiController::class . ':getPost')
+        ->add(IntegerIdCheckerMiddleware::class);
+    $app->put('/api/blog/{id}', BlogApiController::class . ':updatePost')
+        ->add(IntegerIdCheckerMiddleware::class);
+    $app->delete('/api/blog/{id}', BlogApiController::class . ':deletePost')
+        ->add(IntegerIdCheckerMiddleware::class);
+
+    $app->get('/blog', BlogController::class . ':getAllPosts');
+    $app->get('/blog/{id}', BlogController::class . ':getPost')
+        ->add(IntegerIdCheckerMiddleware::class);
 }

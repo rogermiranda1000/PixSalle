@@ -57,27 +57,29 @@ final class MySQLUserRepository implements UserRepository
     }
 
     public function getPhotos() {
-        $query = <<<'QUERY'
-        SELECT photos.uuid, photos.extension, profile.username AS profile_photo_author, uploader.username AS upload_photo_author
-        FROM photos LEFT JOIN users AS profile ON profile.profile_picture = photos.uuid -- profile pictures
+        // profile pictures
+        $query =   "SELECT photos.uuid, photos.extension, profile.username
+                    FROM photos LEFT JOIN users AS profile ON profile.profile_picture = photos.uuid";
 
-        -- upload pictures
-        LEFT JOIN albumphoto ON photos.uuid = albumphoto.photo_id
-        LEFT JOIN albums ON (albumphoto.album_name = albums.name
-                                AND albumphoto.portfolio_name = albums.portfolio_name)
-        LEFT JOIN portfolios ON portfolios.name = albums.portfolio_name
-        LEFT JOIN users AS uploader ON uploader.id = portfolios.user_id;
-        QUERY;
+        // uploaded pictures
+        $query2 =  "SELECT albumPhotos.url, users.username
+                    FROM albumPhotos JOIN portfolios ON albumPhotos.portfolio_name = portfolios.name
+                        JOIN users ON portfolios.user_id = users.id;";
 
         $statement = $this->databaseConnection->prepare($query);
         $statement->execute();
 
         $results = array();
         while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
-            $author = $row->profile_photo_author;
-            if ($author === null) $author = $row->upload_photo_author;
-            if ($author !== null) array_push($results, new Photo($row->uuid, $row->extension, $author));
+            array_push($results, new Photo($row->uuid, $row->extension, $row->username));
         }
+        
+        $statement = $this->databaseConnection->prepare($query2);
+        $statement->execute();
+        while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
+            array_push($results, new Photo($row->url, null, $row->username));
+        }
+
         return $results;
     }
 

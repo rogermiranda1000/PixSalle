@@ -3,16 +3,22 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
+use Salle\PixSalle\Controller\BlogApiController;
+use Salle\PixSalle\Controller\BlogController;
 use Salle\PixSalle\Controller\LandingPageController;
-use Salle\PixSalle\Controller\SignUpController;
+use Salle\PixSalle\Controller\PortfolioController;
 use Salle\PixSalle\Controller\ProfileController;
+use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Controller\WalletController;
+use Salle\PixSalle\Repository\MySQLPortfolioRepository;
 use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
+use Salle\PixSalle\Controller\AlbumController;
+use Salle\PixSalle\Repository\MySQLAlbumRepository;
 
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
@@ -34,7 +40,7 @@ function addDependencies(ContainerInterface $container): void
     );
 
     $container->set('image', function () {
-            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR'] . '/');
+            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR']);
         }
     );
 
@@ -51,6 +57,14 @@ function addDependencies(ContainerInterface $container): void
 
     $container->set('user_repository', function (ContainerInterface $container) {
         return new MySQLUserRepository($container->get('db'));
+    });
+
+    $container->set('portfolio_repository', function (ContainerInterface $container) {
+        return new MySQLPortfolioRepository($container->get('db'));
+    });
+
+    $container->set('album_repository', function (ContainerInterface $container) {
+        return new MySQLAlbumRepository($container->get('db'));
     });
 
     $container->set(
@@ -82,6 +96,20 @@ function addDependencies(ContainerInterface $container): void
     );
 
     $container->set(
+        PortfolioController::class,
+        function (ContainerInterface $c) {
+            return new PortfolioController($c->get('view'), $c->get('portfolio_repository'), $c->get('album_repository'), $c->get("flash"));
+        }
+    );
+
+    $container->set(
+        AlbumController::class,
+        function (ContainerInterface $c) {
+            return new AlbumController($c->get('view'), $c->get('album_repository'), $c->get("flash"));
+        }
+    );
+
+    $container->set(
         WalletController::class,
         function (ContainerInterface $c) {
             return new WalletController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
@@ -99,6 +127,20 @@ function addDependencies(ContainerInterface $container): void
         ProfileController::class,
         function (ContainerInterface $c) {
             return new ProfileController($c->get('view'), $c->get('user_repository'), $c->get('image'));
+        }
+    );
+
+    $container->set(
+        BlogController::class,
+        function (ContainerInterface $c) {
+            return new BlogController($c->get('view'), $c->get('user_repository'), $c->get('blog_repository'));
+        }
+    );
+
+    $container->set(
+        BlogApiController::class,
+        function (ContainerInterface $c) {
+            return new BlogApiController($c->get('blog_repository'));
         }
     );
 }

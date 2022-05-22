@@ -1,13 +1,15 @@
-{% extends "base.twig" %}
+{% extends "base_in.twig" %}
 
 {% block title %}User Profile | PixSalle{% endblock %}
 
 {% block content %}
     <h1>Profile</h1>
     {% if profilePicture %}
+        <div class = "col-sm-4 objetfit">
         <br>
         <img src="{{ profilePicture }}" img alt="user's profile picture">
         <br>
+        </div>
     {% endif %}
     <form action="{{ formAction }}" enctype="multipart/form-data" method="POST">
         <label for="username"> Username: </label>
@@ -41,6 +43,10 @@
         <br>
         <br>
         <input type="submit" value="Save changes">
+        {% if debug %}
+            <br>
+            <p>{{ debug }}</p>
+        {% endif %}
     </form>
     <br>
     <a href="/profile/changePassword">Reset Password</a>

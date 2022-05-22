@@ -116,7 +116,7 @@ describe('Blog API', () => {
             updateBlogpost.title = 'Updated title'
             updateBlogpost.content = 'Updated description'
 
-            cy.request('PUT', `/api/blog/${updateBlogpost.userId}`, updateBlogpost).then((response) => {
+            cy.request('PUT', `/api/blog/${updateBlogpost.id}`, updateBlogpost).then((response) => {
                 expect(response.status).to.eq(200)
                 expect(response.body).to.have.property('title', updateBlogpost.title)
                 expect(response.body).to.have.property('content', updateBlogpost.content)
@@ -128,7 +128,7 @@ describe('Blog API', () => {
         createUsers(1)
 
         let blogPost = createBlogPostsPerUser(1, 1)[0].response.then((response) => {
-            cy.request({method: 'PUT', url: `/api/blog/${response.id}`, failOnStatusCode: false, body: {}})
+            cy.request({method: 'PUT', url: `/api/blog/${response.body.id}`, failOnStatusCode: false, body: {}})
                 .then((response) => {
                     const message = "'title' and/or 'content' key missing";
 

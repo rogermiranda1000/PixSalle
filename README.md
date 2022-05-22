@@ -272,7 +272,7 @@ will no longer appear in the Explore section.
 
 ### Blog
 
-_The user must be logged in, and the functionality is **for all users**._
+_If the user want to create a post he must be logged in._
 
 _This functionality will be tested using cypress. You can check the tests in the cypress folder._
 
@@ -414,12 +414,16 @@ Use `docker compose up` to create the services, then `docker run --rm --interact
 
 ## How to run tests
 
+We are going t use `cypress` to execute end-to-end tests. Before anything else, and only the first time you download the project, go to the `cypress` folder and install all npm dependencies using `docker run -it --rm -v ${PWD}:/usr/src/app -w /usr/src/app -p 3000:3000 node:16-alpine npm install`.
+
+Every time you run the tests, you must do it from the project folder, where the file `cypress.json` is located.
+
 You may have noticed that the `docker-compose.yaml` file does not specify any cypress service. That is because you are
 going to use a separate container to run `cypress`. Every time you want to run a test suite / spec (you will find them
 inside `cypress/integration`) you will need to execute a command such as:
 
 ```
-docker run --env CYPRESS_baseUrl=http://nginx:80 -v "${PWD}:/cypress" -w /cypress --network="pixsalle-template_default" -it --rm vcaballerosalle/cypress-mysql:1.0 /cypress --browser chrome --spec "cypress/integration/sign-in.spec.js"
+docker run --env CYPRESS_baseUrl=http://nginx:80 -v "${PWD}:/cypress" -w /cypress --network="pw2_grupo_23_default" -it --rm vcaballerosalle/cypress-mysql:1.0 /cypress --browser chrome --spec "cypress/integration/sign-in.spec.js"
 ```
 
 You need to notice two things in this command:

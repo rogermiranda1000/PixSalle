@@ -1,0 +1,12 @@
+{% extends "base_in.twig" %}
+
+{% block title %}Portfolio | PixSalle{% endblock %}
+
+{% block content %}
+    <h2>Portfolio Empty!</h2>
+    <form action="{{ formAction }}" method="POST">
+        <p>Album Name: </p>
+        <input type="text" id="name" name="name">
+        <input type="submit" value="Create" />
+    </form>
+{% endblock %}
