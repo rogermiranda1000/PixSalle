@@ -60,7 +60,7 @@ class ProfileController
             $fileInfo = pathinfo($fileName);
             $format = $fileInfo['extension'];
             if (!$this->isValidFormat($format)) {
-                $errors['image'] = 'Only png and jpg images are allowed';
+                $errors['photo'] = 'Only png and jpg images are allowed';
             }
         }
         $errors['username'] = $this->validator->validateUsername($data['username']);
@@ -95,7 +95,7 @@ class ProfileController
             $size = $this->imageRepository->getPhotoSize($uuid, $format);
             if (!$this->isValidDimensions($size) || $this->isOverMaxMB($this->imageRepository->getPath($uuid, $format))) {
                 $this->imageRepository->removePhoto($uuid, $format);
-                $errors['image'] = 'The image should be (500 x 500) or less and not more than 1MB';
+                $errors['photo'] = 'The image should be (500 x 500) or less and not more than 1MB';
 
                 return $this->twig->render(
                     $response,
@@ -105,7 +105,7 @@ class ProfileController
                         'username' => $user->username,
                         'email' => $user->email,
                         'phone' => $user->phone,
-                        'errors' => $errors
+                        'formErrors' => $errors
                     ]
                 );
             }

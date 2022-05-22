@@ -41,6 +41,10 @@
         <br>
         <br>
         <input type="submit" value="Save changes">
+        {% if debug %}
+            <br>
+            <p>{{ debug }}</p>
+        {% endif %}
     </form>
     <br>
     <a href="/profile/changePassword">Reset Password</a>
