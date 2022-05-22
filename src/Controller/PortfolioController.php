@@ -60,6 +60,7 @@ final class PortfolioController
         foreach ($albums_array as $album)
         {
             array_push($albums, [
+                'id' => $album->id(),
                 'name' => $album->name(),
                 'img' => $album->photo()
             ]);
