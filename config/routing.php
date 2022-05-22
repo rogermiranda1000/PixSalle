@@ -46,6 +46,12 @@ function addRoutes(App $app): void
     $app->get('/portfolio/album/{id}', AlbumController::class . ':showAlbum')
         ->add(RequireLoginMiddleware::class)
         ->add(IntegerIdCheckerMiddleware::class);
+    $app->post('/portfolio/album/qr/{id}', AlbumController::class . ':createQr')
+        ->add(RequireLoginMiddleware::class)
+        ->add(IntegerIdCheckerMiddleware::class);
+    $app->get('/portfolio/album/qr/{id}', AlbumController::class . ':downloadQr')
+        ->add(RequireLoginMiddleware::class)
+        ->add(IntegerIdCheckerMiddleware::class);
     $app->post('/portfolio/album/{id}', AlbumController::class . ':uploadPhoto')
         ->add(RequireLoginMiddleware::class)
         ->add(IntegerIdCheckerMiddleware::class);
