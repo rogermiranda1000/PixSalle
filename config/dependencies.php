@@ -3,7 +3,11 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
+use Salle\PixSalle\Controller\BlogApiController;
+use Salle\PixSalle\Controller\BlogController;
 use Salle\PixSalle\Controller\LandingPageController;
+use Salle\PixSalle\Controller\PortfolioController;
+use Salle\PixSalle\Controller\ProfileController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Salle\PixSalle\Controller\BlogApiController;
+use Salle\PixSalle\Controller\BlogController;
 use Salle\PixSalle\Controller\LandingPageController;
 use Salle\PixSalle\Controller\PortfolioController;
 use Salle\PixSalle\Controller\SignUpController;

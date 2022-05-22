@@ -1,13 +1,15 @@
-{% extends "base.twig" %}
+{% extends "base_in.twig" %}
 
 {% block title %}User Profile | PixSalle{% endblock %}
 
 {% block content %}
     <h1>Profile</h1>
     {% if profilePicture %}
+        <div class = "col-sm-4 objetfit">
         <br>
         <img src="{{ profilePicture }}" img alt="user's profile picture">
         <br>
+        </div>
     {% endif %}
     <form action="{{ formAction }}" enctype="multipart/form-data" method="POST">
         <label for="username"> Username: </label>
