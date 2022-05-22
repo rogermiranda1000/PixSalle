@@ -34,7 +34,7 @@ final class ExploreController
         foreach ($this->userRepository->getPhotos() as $img) {
             array_push($photos, [
                 'author' => $img->author(),
-                'img' => $this->imageRepository->getPhoto($img->uuid(), $img->extension())
+                'img' => ($img->url() !== null) ? $img->url() : $this->imageRepository->getPhoto($img->uuid(), $img->extension())
             ]);
         }
 
