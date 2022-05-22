@@ -55,11 +55,10 @@ CREATE TABLE `albumphoto`
 (
     `album_name`        VARCHAR(255),
     `portfolio_name`    VARCHAR(255),
-    `photo_id`          VARCHAR(255),
+    `photo_url`         VARCHAR(255),
     PRIMARY KEY (`album_name`, `portfolio_name`, `photo_id`),
     FOREIGN KEY (`album_name`) REFERENCES albums(`name`),
-    FOREIGN KEY (`portfolio_name`) REFERENCES portfolios(`name`),
-    FOREIGN KEY (`photo_id`) REFERENCES photos(`uuid`)
+    FOREIGN KEY (`portfolio_name`) REFERENCES portfolios(`name`)
 );
 
 CREATE TABLE `post`
