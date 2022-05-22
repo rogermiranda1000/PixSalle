@@ -7,9 +7,7 @@
         {{album}}
     </h1>
     {% if not disable %}
-    <form action="{{ formAction }}" method="DELETE">
-        <input type="submit" value="Delete Album">
-    </form>
+    <button id="delete-album" delete-path="{{ formAction }}">Delete Album</button>
     <br>
     <form action="{{ formAction }}" method="POST">
         <label for="imageUrl"> Add image - Image URL:</label>
@@ -29,4 +27,6 @@
     {% endfor %}
 
     {% endif %}
+
+    <script type="text/javascript" src="{{ full_url_for('home') }}assets/js/button-deleter.js"></script>
 {% endblock %}

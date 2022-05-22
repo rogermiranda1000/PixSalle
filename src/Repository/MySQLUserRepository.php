@@ -77,7 +77,7 @@ final class MySQLUserRepository implements UserRepository
         $statement = $this->databaseConnection->prepare($query2);
         $statement->execute();
         while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
-            array_push($results, new Photo($row->url, $row->username));
+            array_push($results, new Photo($row->url, null, $row->username));
         }
 
         return $results;

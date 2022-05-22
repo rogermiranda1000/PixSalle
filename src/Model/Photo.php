@@ -9,7 +9,7 @@ class Photo {
     private ?string $extension; // null if url
     private string $author;
     
-    public function __construct(string $uuid_or_url, string $extension, string $author) {
+    public function __construct(string $uuid_or_url, ?string $extension, string $author) {
         $this->uuid_or_url = $uuid_or_url;
         $this->extension = $extension;
         $this->author = $author;
