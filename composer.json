@@ -25,6 +25,7 @@
     "ext-json": "*",
     "slim/flash": "^0.4.0",
     "ramsey/uuid": "^4.3",
-    "slim/http": "^1.2"
+    "slim/http": "^1.2",
+    "guzzlehttp/guzzle": "^7.0"
   }
 }

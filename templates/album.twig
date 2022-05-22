@@ -1,0 +1,50 @@
+{% extends "base.twig" %}
+
+{% block title %}Album | PixSalle{% endblock %}
+
+{% block content %}
+    <h1>
+        {{album}}
+    </h1>
+    {% if not disable %}
+        <button id="delete-album" delete-path="{{ formAction }}">Delete Album</button>
+        <br>
+    {% if not qr %}
+        <form action="{{ formActionQr }}" method="POST">
+            <input type="submit" value="Generate QR">
+        </form>
+    {% endif %}
+    {% if qr %}
+        <img src="{{ qr }}" height="250"/>
+        <br>
+        <form action="{{ formActionQr }}" method="GET">
+            <input type="submit" value="Download QR">
+        </form>
+        <br>
+    {% endif %}
+
+    <form action="{{ formAction }}" method="DELETE">
+        <input type="submit" value="Delete Album">
+    </form>
+    <br>
+    <form action="{{ formAction }}" method="POST">
+        <label for="imageUrl"> Add image - Image URL:</label>
+        <br>
+        <input type="text" name="imageUrl">
+        <br>
+        <input type="submit" value="Add image">
+    </form>
+    <br>
+
+    {% for photo in photos %}
+        <img src="{{photo.url}}" alt="Album photo" height="400" />
+        <br>
+        <button imageId="{{ photo.id }}">Delete Photo</button>
+        <br>
+        <br>
+    {% endfor %}
+
+    {% endif %}
+
+    <script type="text/javascript" src="{{ full_url_for('home') }}assets/js/button-deleter.js"></script>
+{% endblock %}

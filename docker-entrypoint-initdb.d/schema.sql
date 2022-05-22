@@ -39,8 +39,9 @@ CREATE TABLE `portfolios`
 CREATE TABLE `albums`
 (
     `name`              VARCHAR(255),
+    `id`                INTEGER AUTO_INCREMENT,
     `portfolio_name`    VARCHAR(255),
-    PRIMARY KEY (`name`, `portfolio_name`),
+    PRIMARY KEY (`id`, `portfolio_name`),
     FOREIGN KEY (`portfolio_name`) REFERENCES portfolios(`name`)
 );
 
@@ -51,15 +52,15 @@ CREATE TABLE `photos`
     PRIMARY KEY (`uuid`)
 );
 
-CREATE TABLE `albumphoto`
+CREATE TABLE `albumPhotos`
 (
-    `album_name`        VARCHAR(255),
+    `album_id`          INTEGER,
     `portfolio_name`    VARCHAR(255),
     `photo_id`          VARCHAR(255),
-    PRIMARY KEY (`album_name`, `portfolio_name`, `photo_id`),
-    FOREIGN KEY (`album_name`) REFERENCES albums(`name`),
-    FOREIGN KEY (`portfolio_name`) REFERENCES portfolios(`name`),
-    FOREIGN KEY (`photo_id`) REFERENCES photos(`uuid`)
+    `url`               VARCHAR(255),
+    PRIMARY KEY (`album_id`, `portfolio_name`, `photo_id`),
+    FOREIGN KEY (`album_id`) REFERENCES albums(`id`),
+    FOREIGN KEY (`portfolio_name`) REFERENCES portfolios(`name`)
 );
 
 CREATE TABLE `post`
