@@ -15,4 +15,11 @@
         By {{photo.author}}.
         <br>
     {% endfor %}
+    {% if membership == "active" %}
+        <form action="{{ formAction }}" method="POST">
+            <p>Album Name: </p>
+            <input type="text" id="name" name="name">
+            <input type="submit" value="Create" />
+        </form>
+    {% endif %}
 {% endblock %}

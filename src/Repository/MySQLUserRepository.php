@@ -33,6 +33,20 @@ final class MySQLUserRepository implements UserRepository
         $statement->execute();
     }
 
+    public function getUserMembership(int $id) {
+        $query = "SELECT membership FROM users WHERE id = :id";
+
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('id', $id, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $row = $statement->fetch(PDO::FETCH_OBJ);
+
+        return $row->membership;
+    }
+
     public function setUserMembership(int $id, string $new_membership): void {
         $query = "UPDATE users SET membership = :membership WHERE id = :id";
 
