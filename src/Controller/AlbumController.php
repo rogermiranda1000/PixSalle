@@ -121,15 +121,15 @@ class AlbumController
 
             $args['qr'] = $this->createQRGuzzle($url, $album);
         }
-        $this->makeSpaceQr();
+        $this->makeSpaceQr(0);
 
         return $this->showAlbum($request, $response, $args);
     }
 
     // Leave maximum one QR
-    private function makeSpaceQr() {
+    private function makeSpaceQr($iterations) {
         $files = glob(AlbumController::__QR_PATH__.'*.png');
-
+        if ($iterations > 30) return;
         if (count($files) > 2) {
             $oldest = PHP_INT_MIN;
             $toDelete = null;
@@ -143,6 +143,9 @@ class AlbumController
             if ($toDelete != null) {
                 unlink($toDelete);
             }
+        }
+        if (count($files) > 2) {
+            $this->makeSpaceQr($iterations + 1);
         }
     }
 
