@@ -17,6 +17,8 @@ use Salle\PixSalle\Repository\MySQLPortfolioRepository;
 use Salle\PixSalle\Repository\MySQLUserRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
+use Salle\PixSalle\Controller\AlbumController;
+use Salle\PixSalle\Repository\MySQLAlbumRepository;
 
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
@@ -61,6 +63,10 @@ function addDependencies(ContainerInterface $container): void
         return new MySQLPortfolioRepository($container->get('db'));
     });
 
+    $container->set('album_repository', function (ContainerInterface $container) {
+        return new MySQLAlbumRepository($container->get('db'));
+    });
+
     $container->set(
         LandingPageController::class,
         function (ContainerInterface $c) {
@@ -93,6 +99,13 @@ function addDependencies(ContainerInterface $container): void
         PortfolioController::class,
         function (ContainerInterface $c) {
             return new PortfolioController($c->get('view'), $c->get('portfolio_repository'), $c->get("flash"));
+        }
+    );
+
+    $container->set(
+        AlbumController::class,
+        function (ContainerInterface $c) {
+            return new AlbumController($c->get('view'), $c->get('album_repository'), $c->get("flash"));
         }
     );
 
