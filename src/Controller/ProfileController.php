@@ -176,7 +176,7 @@ class ProfileController
                 'change-password.twig',
                 [
                     'formAction' => $routeParser->urlFor('changePassword'),
-                    'formErrors' => $errors
+                    'formError' => "Error, something went wrong"
                 ]
             );
         }
