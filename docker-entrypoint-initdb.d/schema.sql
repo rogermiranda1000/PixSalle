@@ -56,7 +56,7 @@ CREATE TABLE `albumPhotos`
 (
     `album_id`          INTEGER,
     `portfolio_name`    VARCHAR(255),
-    `photo_id`          INTEGER AUTO_INCREMENT,
+    `photo_id`          VARCHAR(255),
     `url`               VARCHAR(255),
     PRIMARY KEY (`album_id`, `portfolio_name`, `photo_id`),
     FOREIGN KEY (`album_id`) REFERENCES albums(`id`),
