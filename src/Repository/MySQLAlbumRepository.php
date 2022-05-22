@@ -140,8 +140,8 @@ final class MySQLAlbumRepository implements AlbumRepository
 
     public function getAlbums(int $user) {
         $query = <<<'QUERY'
-        SELECT album.id AS id, album.name AS name
-        FROM albums AS album LEFT JOIN portfolios ON albums.portfolio_name = portfolios.name
+        SELECT album.id, album.portfolio_name AS portfolio, album.name AS name
+        FROM albums AS album LEFT JOIN portfolios ON album.portfolio_name = portfolios.name
         WHERE portfolios.user_id = :user
         QUERY;
 
@@ -151,23 +151,24 @@ final class MySQLAlbumRepository implements AlbumRepository
 
         $results = array();
         while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
-            $album_id = $row->id;
-            $query = <<<'QUERY'
+            $album_id = intval($row->id);
+            $query2 = <<<'QUERY'
             SELECT albumPhotos.url AS url, albumPhotos.photo_id AS id
             FROM albumPhotos WHERE albumPhotos.album_id = :album LIMIT 1
             QUERY;
-            $statement = $this->databaseConnection->prepare($query);
-            $statement->bindParam('album', $album_id, PDO::PARAM_INT);
-            $statement->execute();
-            $photo_row = $statement->fetch(PDO::FETCH_OBJ);
+            $statement2 = $this->databaseConnection->prepare($query2);
+            $statement2->bindParam('album', $album_id, PDO::PARAM_INT);
+            $statement2->execute();
 
-            $album = new Album($row->url, $row->id);
+            $photo_row = $statement2->fetch(PDO::FETCH_OBJ);
             if ($photo_row != null) {
+                $album = new Album($photo_row->url, intval($photo_row->id));
+
                 $photo = new AlbumPhoto($photo_row->url, $photo_row->id);
                 $album->setPhoto($photo);
-            }
 
-            array_push($results, new Album($row->url, $row->id));
+                array_push($results, $album);
+            }
         }
         return $results;
     }

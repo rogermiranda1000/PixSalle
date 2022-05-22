@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-use Salle\PixSalle\Controller\LandingPageController;
-use Salle\PixSalle\Controller\BlogController;
 use Salle\PixSalle\Controller\BlogApiController;
+use Salle\PixSalle\Controller\BlogController;
+use Salle\PixSalle\Controller\LandingPageController;
+use Salle\PixSalle\Controller\PortfolioController;
 use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
@@ -24,7 +25,6 @@ function addRoutes(App $app): void
     $app->get('/logout', UserSessionController::class . ':logout')->setName('logout');
     $app->get('/sign-up', SignUpController::class . ':showSignUpForm')->setName('signUp');
     $app->post('/sign-up', SignUpController::class . ':signUp');
-
     $app->get('/profile', ProfileController::class . ':showProfileForm')
         ->setName('profile')
         ->add(RequireLoginMiddleware::class);
@@ -36,11 +36,16 @@ function addRoutes(App $app): void
     $app->post('/profile/changePassword', ProfileController::class . ':changePassword')
         ->add(RequireLoginMiddleware::class);
 
-
     $app->get('/user/membership', MembershipController::class . ':showMembershipForm')
         ->setName('membership')
         ->add(RequireLoginMiddleware::class);
     $app->post('/user/membership', MembershipController::class . ':applyMembership')
+        ->add(RequireLoginMiddleware::class);
+
+    $app->get('/portfolio', PortfolioController::class . ':showPortfolioPage')
+        ->setName('portfolio')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/portfolio', PortfolioController::class . ':postPortfolio')
         ->add(RequireLoginMiddleware::class);
 
     $app->get('/portfolio/album/{id}', AlbumController::class . ':showAlbum')
@@ -67,7 +72,7 @@ function addRoutes(App $app): void
         ->add(RequireLoginMiddleware::class);
     $app->post('/user/wallet', WalletController::class . ':addToWallet')
         ->add(RequireLoginMiddleware::class);
-        
+
     $app->get('/api/blog', BlogApiController::class . ':getAllPosts');
     $app->post('/api/blog', BlogApiController::class . ':insertPost');
     $app->get('/api/blog/{id}', BlogApiController::class . ':getPost')
@@ -76,7 +81,7 @@ function addRoutes(App $app): void
         ->add(IntegerIdCheckerMiddleware::class);
     $app->delete('/api/blog/{id}', BlogApiController::class . ':deletePost')
         ->add(IntegerIdCheckerMiddleware::class);
-       
+
     $app->get('/blog', BlogController::class . ':getAllPosts');
     $app->get('/blog/{id}', BlogController::class . ':getPost')
         ->add(IntegerIdCheckerMiddleware::class);

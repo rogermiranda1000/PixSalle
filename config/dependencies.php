@@ -3,17 +3,18 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
-use Salle\PixSalle\Controller\LandingPageController;
-use Salle\PixSalle\Controller\BlogController;
 use Salle\PixSalle\Controller\BlogApiController;
-use Salle\PixSalle\Controller\SignUpController;
+use Salle\PixSalle\Controller\BlogController;
+use Salle\PixSalle\Controller\LandingPageController;
+use Salle\PixSalle\Controller\PortfolioController;
 use Salle\PixSalle\Controller\ProfileController;
+use Salle\PixSalle\Controller\SignUpController;
 use Salle\PixSalle\Controller\MembershipController;
 use Salle\PixSalle\Controller\UserSessionController;
 use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Controller\WalletController;
+use Salle\PixSalle\Repository\MySQLPortfolioRepository;
 use Salle\PixSalle\Repository\MySQLUserRepository;
-use Salle\PixSalle\Repository\MySQLBlogRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
 use Salle\PixSalle\Controller\AlbumController;
@@ -39,7 +40,7 @@ function addDependencies(ContainerInterface $container): void
     );
 
     $container->set('image', function () {
-            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR'] . '/');
+            return new ImageManager(__DIR__ . '/' . $_ENV['IMAGE_BASE_DIR']);
         }
     );
 
@@ -58,8 +59,8 @@ function addDependencies(ContainerInterface $container): void
         return new MySQLUserRepository($container->get('db'));
     });
 
-    $container->set('blog_repository', function (ContainerInterface $container) {
-        return new MySQLBlogRepository($container->get('db'));
+    $container->set('portfolio_repository', function (ContainerInterface $container) {
+        return new MySQLPortfolioRepository($container->get('db'));
     });
 
     $container->set('album_repository', function (ContainerInterface $container) {
@@ -91,6 +92,13 @@ function addDependencies(ContainerInterface $container): void
         MembershipController::class,
         function (ContainerInterface $c) {
             return new MembershipController($c->get('view'), $c->get('user_repository'), $c->get("flash"));
+        }
+    );
+
+    $container->set(
+        PortfolioController::class,
+        function (ContainerInterface $c) {
+            return new PortfolioController($c->get('view'), $c->get('portfolio_repository'), $c->get('album_repository'), $c->get("flash"));
         }
     );
 
