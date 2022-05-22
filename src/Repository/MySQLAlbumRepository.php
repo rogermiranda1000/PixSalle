@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salle\PixSalle\Repository;
 
 use PDO;
+use Ramsey\Uuid\Uuid;
 use Salle\PixSalle\Model\AlbumPhoto;
 use Salle\PixSalle\Repository\AlbumRepository;
 
@@ -20,7 +21,7 @@ final class MySQLAlbumRepository implements AlbumRepository
     public function getAlbumPhotos(int $album)
     {
         $query = <<<'QUERY'
-        SELECT photo.url AS url, photo.id AS id
+        SELECT photo.url AS url, photo.photo_id AS id
         FROM albumPhotos AS photo WHERE photo.album_id = :album
         QUERY;
 
@@ -37,24 +38,59 @@ final class MySQLAlbumRepository implements AlbumRepository
         return $results;
     }
 
-    public function addPhoto(int $album, string $portfolio, string $url)
+    public function getAlbumName(int $album): string
     {
         $query = <<<'QUERY'
-        INSERT INTO albumPhotos(album_id, portfolio_name, url)
-        VALUES(:album, :portfolio, :url)
+        SELECT albums.name AS  name
+        FROM albums WHERE albums.id = :album
         QUERY;
 
         $statement = $this->databaseConnection->prepare($query);
-
-        $statement->bindParam('album', $name, PDO::PARAM_STR);
-        $statement->bindParam('portfolio', $portfolio, PDO::PARAM_STR);
-        $statement->bindParam('url', $url, PDO::PARAM_STR);
-
+        $statement->bindParam('album', $album, PDO::PARAM_INT);
         $statement->execute();
+        if ($result = $statement->fetch(PDO::FETCH_OBJ)) {
+            return $result->name;
+        }
+        return '';
     }
 
-    public function deletePhoto(int $album, string $portfolio, int $photo)
+    private function getPortfolioName(int $album) {
+        $query = <<<'QUERY'
+        SELECT albums.portfolio_name AS portfolio
+        FROM albums WHERE albums.id = :album
+        QUERY;
+
+        $statement = $this->databaseConnection->prepare($query);
+        $statement->bindParam('album', $album, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetch(PDO::FETCH_OBJ)->portfolio;
+    }
+
+    public function addPhoto(int $album, string $url)
     {
+        $portfolio = $this->getPortfolioName($album);
+
+        $query = <<<'QUERY'
+        INSERT INTO albumPhotos(album_id, portfolio_name, url, photo_id)
+        VALUES(:album, :portfolio, :url, :id)
+        QUERY;
+
+        $id = Uuid::uuid4()->toString();
+        $statement = $this->databaseConnection->prepare($query);
+
+        $statement->bindParam('album', $album, PDO::PARAM_STR);
+        $statement->bindParam('portfolio', $portfolio, PDO::PARAM_STR);
+        $statement->bindParam('url', $url, PDO::PARAM_STR);
+        $statement->bindParam('id', $id, PDO::PARAM_STR);
+
+        $statement->execute();
+        return $id;
+    }
+
+    public function deletePhoto(int $album, int $photo)
+    {
+        $portfolio_name = $this->getPortfolioName($album);
+
         $query = <<<'QUERY'
         DELETE FROM albumPhotos AS photo WHERE photo.album_id = :album AND photo.portfolio_name = :portfolio AND  photo.photo_id = :photo;
         QUERY;
@@ -62,9 +98,27 @@ final class MySQLAlbumRepository implements AlbumRepository
         $statement = $this->databaseConnection->prepare($query);
 
         $statement->bindParam('album', $album, PDO::PARAM_INT);
-        $statement->bindParam('portfolio_name', $portfolio, PDO::PARAM_STR);
+        $statement->bindParam('portfolio_name', $portfolio_name, PDO::PARAM_STR);
         $statement->bindParam('photo', $photo, PDO::PARAM_INT);
 
+        $statement->execute();
+    }
+
+    public function deleteAlbum(int $album) {
+        // Delete photos from album
+        $query = <<<'QUERY'
+        DELETE FROM albumPhotos WHERE albumPhotos.album_id = :album
+        QUERY;
+        $statement = $this->databaseConnection->prepare($query);
+        $statement->bindParam('album', $album, PDO::PARAM_INT);
+        $statement->execute();
+
+        // Delete album
+        $query = <<<'QUERY'
+        DELETE FROM albums WHERE albums.id = :album
+        QUERY;
+        $statement = $this->databaseConnection->prepare($query);
+        $statement->bindParam('album', $album, PDO::PARAM_INT);
         $statement->execute();
     }
 
