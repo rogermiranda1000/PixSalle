@@ -98,7 +98,7 @@ function addDependencies(ContainerInterface $container): void
     $container->set(
         PortfolioController::class,
         function (ContainerInterface $c) {
-            return new PortfolioController($c->get('view'), $c->get('portfolio_repository'), $c->get("flash"));
+            return new PortfolioController($c->get('view'), $c->get('portfolio_repository'), $c->get('album_repository'), $c->get("flash"));
         }
     );
 

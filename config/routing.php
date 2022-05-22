@@ -42,6 +42,12 @@ function addRoutes(App $app): void
     $app->post('/user/membership', MembershipController::class . ':applyMembership')
         ->add(RequireLoginMiddleware::class);
 
+    $app->get('/portfolio', PortfolioController::class . ':showPortfolioPage')
+        ->setName('portfolio')
+        ->add(RequireLoginMiddleware::class);
+    $app->post('/portfolio', PortfolioController::class . ':createPortfolio')
+        ->setName('portfolio')
+        ->add(RequireLoginMiddleware::class);
     $app->get('/portfolio/album/{id}', AlbumController::class . ':showAlbum')
         ->add(RequireLoginMiddleware::class)
         ->add(IntegerIdCheckerMiddleware::class);
@@ -59,14 +65,6 @@ function addRoutes(App $app): void
         ->setName('wallet')
         ->add(RequireLoginMiddleware::class);
     $app->post('/user/wallet', WalletController::class . ':addToWallet')
-        ->add(RequireLoginMiddleware::class);
-
-    // Portfolio
-    $app->get('/portfolio', PortfolioController::class . ':showPortfolioPage')
-        ->setName('portfolio')
-        ->add(RequireLoginMiddleware::class);
-    $app->post('/portfolio', PortfolioController::class . ':createPortfolio')
-        ->setName('portfolio')
         ->add(RequireLoginMiddleware::class);
 
     $app->get('/api/blog', BlogApiController::class . ':getAllPosts');
