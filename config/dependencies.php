@@ -15,6 +15,7 @@ use Salle\PixSalle\Controller\ExploreController;
 use Salle\PixSalle\Controller\WalletController;
 use Salle\PixSalle\Repository\MySQLPortfolioRepository;
 use Salle\PixSalle\Repository\MySQLUserRepository;
+use Salle\PixSalle\Repository\MySQLBlogRepository;
 use Salle\PixSalle\Repository\PDOConnectionBuilder;
 use Salle\PixSalle\Repository\ImageManager;
 use Salle\PixSalle\Controller\AlbumController;
@@ -57,6 +58,10 @@ function addDependencies(ContainerInterface $container): void
 
     $container->set('user_repository', function (ContainerInterface $container) {
         return new MySQLUserRepository($container->get('db'));
+    });
+
+    $container->set('blog_repository', function (ContainerInterface $container) {
+        return new MySQLBlogRepository($container->get('db'));
     });
 
     $container->set('portfolio_repository', function (ContainerInterface $container) {
